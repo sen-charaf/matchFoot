@@ -62,4 +62,17 @@ class PayContoller extends Controller
 
         return response()->json(['message' => 'Pay updated'], 200);
     }
+
+    public function destroy($id)
+    {
+        $pay = Pay::find($id);
+
+        if ($pay == null) {
+            return response()->json(['error' => 'Pay not found'], 404);
+        }
+
+        $pay->delete();
+
+        return response()->json(['message' => 'Pay deleted'], 200);
+    }
 }

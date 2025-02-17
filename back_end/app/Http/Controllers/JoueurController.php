@@ -7,7 +7,7 @@ use App\Models\Joueur;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Pay;
 
-class JoueurContoller extends Controller
+class JoueurController extends Controller
 {
     public function index()
     {
@@ -28,7 +28,7 @@ class JoueurContoller extends Controller
             'poid' => 'required | numeric | positive',
             'taill' => 'required | numeric | positive',
             'pied' => 'required | string | max:1',
-            'photo' => 'required | file ',
+            'photo' => 'file ',
             'nationalite' => 'required | string'
         ]);
 
@@ -71,8 +71,57 @@ class JoueurContoller extends Controller
             return response()->json(['error' => 'Joueur not found'], 404);
         }
 
+        $validator = Validator::make($request->all(), [
+            'nom' => 'sometimes | string | max:30',
+            'prenom' => 'sometimes | string | max:30',
+            'date_naissance' => 'sometimes | date',
+            'poid' => 'sometimes | numeric | positive',
+            'taill' => 'sometimes | numeric | positive',
+            'pied' => 'sometimes | string | max:1',
+            'photo' => 'sometimes | file ',
+            'nationalite' => 'sometimes | string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $joueur->update($request->all());
+
+        if ($request->has('nationalite')) {
+            $nationalite_id = Pay::find($request->nationalite);
+
+            if ($nationalite_id == null) {
+                return response()->json(['error' => 'Nationalite not found'], 404);
+            }
+            $joueur->nationalite_id = $nationalite_id->id;
+        }
+
+        if ($request->has('photo')) {
+            $photo = $request->file('photo');
+            $photo->store('public/photos/joueurs');
+            $photo_path = $photo->hashName();
+            $joueur->photo_path = $photo_path;
+        }
+
+        $joueur->save();
+        
 
         return response()->json(['message' => 'Joueur updated'], 200);
+    }
+
+
+    public function destroy($id)
+    {
+        $joueur = Joueur::find($id);
+
+        if ($joueur == null) {
+            return response()->json(['error' => 'Joueur not found'], 404);
+        }
+
+        $joueur->delete();
+
+        return response()->json(['message' => 'Joueur deleted'], 200);
     }
     
 

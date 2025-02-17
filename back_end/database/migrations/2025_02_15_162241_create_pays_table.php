@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pays', function (Blueprint $table) {
             $table->integer('id', true);
-            $table->string('nationalite', 50);
+            $table->string('nationalite', 50)->unique('nationalite');
         });
     }
 

@@ -9,7 +9,7 @@ use App\Models\Pay;
 class Joueur extends Model
 {
     protected $table = 'joueurs';
-    protected $timestamps = false;
+    public $timestamps = false;
     protected $fillable = [
         'nom',
         'prenom',
