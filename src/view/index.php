@@ -1,3 +1,6 @@
+<?php
+  require_once '../database/connectDB.php';
+ ?>
 <!doctype html>
 <html>
 <head>
@@ -6,8 +9,6 @@
   <link href="./styles/output.css" rel="stylesheet">
 </head>
 <body>
-  <h1 class=" bg-amber-800 ">
-    Hello world!
-  </h1>
+
 </body>
 </html>
