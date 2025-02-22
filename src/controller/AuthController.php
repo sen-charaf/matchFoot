@@ -17,17 +17,20 @@ class AuthController{
 
         
             if(empty($username)  || empty($email) || empty($password) || empty($confirm_password)){
+                http_response_code(400);
                 echo json_encode(['message' => 'All fields are required', 'status' => 400]);
                 return;
             }
 
             if($password !== $confirm_password){
+                http_response_code(400);
                 echo json_encode(['message' => 'Passwords do not match', 'status' => 400]);
                 return;
             }
 
             $existingUser = User::getUserByEmailOrUsername($email, $username);
             if($existingUser){
+                http_response_code(400);
                 echo json_encode(['message' => 'User already exists', 'status' => 400]);
                 return;
             }
@@ -38,6 +41,7 @@ class AuthController{
             $res = User::create($username, $displayed_name, $email, $hashedPassword,$created_at);
             $res_array=json_decode($res,true);
             if( $res_array['status'] === 201){
+                http_response_code(201);
                 echo $res;
                 return;
             }
@@ -45,6 +49,7 @@ class AuthController{
             echo $res;
             return;
         }else{
+            http_response_code(405);
             echo json_encode(['message' => 'Method not allowed', 'status' => 405]);
             return;
         }
@@ -64,12 +69,14 @@ class AuthController{
             
             $user = User::getUserByEmailOrUsername($email, $username);
             if(!$user){
+                http_response_code(404);
                 echo json_encode(['message' => 'User not found', 'status' => 404]);
                 return;
             }
 
             echo $user->getHashedPassword();            
             if(!password_verify($password, $user->password)){
+                http_response_code(400);
                 echo json_encode(['message' => 'Invalid credentials', 'status' => 400]);
                 return;
             }
@@ -77,10 +84,12 @@ class AuthController{
             session_start();
             $_SESSION['user'] = $user;
 
+            http_response_code(200);
             echo json_encode(['message' => 'Login successful', 'status' => 200, 'user' => $user]);
             return;
 
         }else{
+            http_response_code(405);
             echo json_encode(['message' => 'Method not allowed', 'status' => 405]);
             return;
         }
