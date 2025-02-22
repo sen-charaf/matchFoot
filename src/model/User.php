@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/../database/connectDB.php';
 
-class User extends DbConnection
+class User extends DbConnection implements JsonSerializable
 {
-    private static $table = 'user';
+    private static $table = 'users';
 
-    
+
 
     protected $id;
     protected $username;
@@ -15,9 +15,9 @@ class User extends DbConnection
     protected $profile_path;
     protected $created_at;
 
-    public function __construct($id, $username, $displayed_name, $email, $password, $profile_path = null, $created_at)
+    public function __construct($id, $username, $displayed_name, $email, $password, $created_at, $profile_path = null)
     {
-        
+
         $this->id = $id;
         $this->username = $username;
         $this->displayed_name = $displayed_name;
@@ -66,7 +66,6 @@ class User extends DbConnection
 
             if ($userData) {
                 return new User(
-                    $pdo,
                     $userData['id'],
                     $userData['username'],
                     $userData['displayed_name'],
@@ -82,24 +81,23 @@ class User extends DbConnection
         }
     }
 
-    public static function create($username, $displayed_name=null, $email, $password, $profile_path, $created_at)
+    public static function create($username, $displayed_name, $email, $password, $created_at, $profile_path = null)
     {
-        
+
 
         try {
             $pdo = self::connect();
             $table = self::$table;
-            $stmt = $pdo->prepare(" INSERT INTO `$table` (username, displayed_name, email, password, profile_path) 
-                                VALUES (:username, :displayed_name, :email, :password, :profile_path)");
-            $stmt->execute(['username' => $username, 'displayed_name' => $displayed_name, 'email' => $email, 'password' => $password, 'profile_path' => $profile_path]);
+            $stmt = $pdo->prepare(" INSERT INTO `$table` (username, displayed_name, email, password, profile_path, created_at) 
+                                VALUES (:username, :displayed_name, :email, :password, :profile_path, :created_at)");
+            $stmt->execute(['username' => $username, 'displayed_name' => $displayed_name, 'email' => $email, 'password' => $password, 'profile_path' => $profile_path, 'created_at' => $created_at]);
             $id = $pdo->lastInsertId();
-            return new User($pdo, $id, $username, $displayed_name, $email, $password, $profile_path, $created_at);
+            $user = new User($id, $username, $displayed_name, $email, $password, $profile_path, $created_at);
+            return json_encode(['message' => 'User created successfully', 'status' => 201, 'user' => $user]);
         } catch (PDOException $th) {
-            $th->getMessage();
-            return null;
+            return json_encode(['message' => 'Failed to create the user', 'error' => $th, 'status' => 500]);
         } catch (Exception $e) {
-            $e->getMessage();
-            return null;
+            return $e->getMessage();
         }
     }
 
@@ -121,4 +119,69 @@ class User extends DbConnection
             return false;
         }
     }
+
+
+
+    public function jsonSerialize(): array {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'displayed_name' => $this->displayed_name,
+            'email' => $this->email,
+            'profile_path' => $this->profile_path,
+            'created_at' => $this->created_at
+        ];
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getProfilePath()
+    {
+        return $this->profile_path;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
+    public function getDisplayedName()
+    {
+        return $this->displayed_name;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function getHashedPassword()
+    {
+        return $this->password;
+    }
+
+    public function __get($name)
+    {
+        return $this->$name;
+    }
+
+    public function __set($name, $value)
+    {
+        $this->$name = $value;
+    }
+
+
+    public function __toString()
+    {
+        return json_encode($this);
+    }
+    
 }
