@@ -74,7 +74,7 @@ class AuthController{
                 return;
             }
 
-            echo $user->getHashedPassword();            
+            //echo $user->getHashedPassword();            
             if(!password_verify($password, $user->password)){
                 http_response_code(400);
                 echo json_encode(['message' => 'Invalid credentials', 'status' => 400]);
