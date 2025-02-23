@@ -1,5 +1,10 @@
 <?php
+
+namespace person;
+
 require_once __DIR__ . '/../database/connectDB.php';
+use DateTime;
+
 
 class Person {
     protected $pdo;
@@ -12,7 +17,7 @@ class Person {
     public function __construct($pdo, $id, $firstName, $lastName, $birthDate){
         $this->pdo = $pdo;
         $this->id = $id;
-        $this->fistName = $firstName;
+        $this->firstName = $firstName;
         $this->birthDate = $birthDate;
     }
 

@@ -2,8 +2,12 @@
 
 namespace player;
 
+require 'Person.php';
+
+use person\Person; // Ensure the correct namespace for Person class
+use DbConnection;
 use PDO;
-use Person; // Ensure the correct namespace for Person class
+use PDOException;
 
 class Player extends Person
 {
@@ -15,14 +19,23 @@ class Player extends Person
     private int $equip;
 
 
-    private function isExist(int $idPlayer): bool
+
+    private static function isExist(int $idPlayer): bool
     {
+        $pdo = DbConnection::connect();
+
         $query = "SELECT COUNT(*) FROM joueur WHERE id_joueur=?";
-        $stmt = $this->pdo->prepare($query);
+
+        $stmt = $pdo->prepare($query);
         $stmt->execute([$idPlayer]);
         return $stmt->fetchColumn() > 0;
     }
 
+
+    public function setPDO(PDO  $pdo)
+    {
+        parent::$pdo = $pdo;
+    }
 
     public function __construct(string $firstName, string $lastName, string $birthDate, float $poid, float $taille, string $foot, string $photoPath, int $equip)
     {
@@ -34,7 +47,7 @@ class Player extends Person
         $this->equip = $equip;
 
         // Call the parent constructor (PDO already exists in Person)
-        parent::__construct(null, $firstName, $lastName, $birthDate);
+        parent::__construct(null, null,$firstName, $lastName, $birthDate);
     }
 
 
@@ -45,16 +58,28 @@ class Player extends Person
         $query = "INSERT INTO joueur (nom, prenom, date_naissance, pied, poid, taille, equip, photoPath) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($query);
 
-        return $stmt->execute([
-            $this->firstName,  // nom
-            $this->lastName,   // prenom
-            $this->birthDate,  // date_naissance
-            $this->foot,       // pied
-            $this->poid,       // poid
-            $this->taille,     // taille
-            $this->equip,      // equip
-            $this->photoPath   // photoPath
-        ]);
+        // debug remove
+        echo "FirstName:". $this->firstName;
+        echo " <br>lastname:". $this->lastName;
+        // echo ":". $this->lastName;
+
+        try{
+            return $stmt->execute([
+                $this->firstName,  // nom
+                $this->lastName,   // prenom
+                $this->birthDate,  // date_naissance
+                $this->foot,       // pied
+                $this->poid,       // poid
+                $this->taille,     // taille
+                $this->equip,      // equip
+                $this->photoPath   // photoPath
+            ]);
+        }catch(PDOException $e)
+        {
+
+            echo "<pre>".$e->getMessage()."</pre>";
+            return false;
+        }
     }
 
     // UPDATE
@@ -99,7 +124,7 @@ class Player extends Person
     }
 
     // read all players
-    public function getAllPlayers(int $page=0,int $perPage=30): array
+    public static  function getAllPlayers(int $page=0,int $perPage=30): array
     {
         if( $page < 1 ) $page=1;
         
@@ -109,7 +134,7 @@ class Player extends Person
         $offset = ($page - 1) * $perPage;
 
         $query = "SELECT * FROM joueur LIMIT :perPage OFFSET :offset";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = DbConnection::connect()->prepare($query);
         $stmt->bindValue(':perPage', $perPage, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
