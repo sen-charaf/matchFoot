@@ -2,24 +2,16 @@
 
 class DbConnection {
 
-    private string $host        = "db";
-    private string $user        = "root"; 
-    private string $pass        = "root";
-    private string $dbname      = "efoot";
-    private string $charset     = "utf8mb4";
+    static private $host = "localhost:88";
+    static private $user = "root"; 
+    static private $pass = ""; 
+    static private $dbname = "efoot";
+    static private $charset = "utf8mb4";
 
-    public function __construct() {
-        // todo work with entry env file
-        // $this->host = $_ENV["MYSQL_HOST"];
-        // $this->user = $_ENV["MYSQL_USER"];
-        // $this->pass = $_ENV["MYSQL_PASSWORD"];
-        // $this->dbname = $_ENV["MYSQL_DB_NAME"];
-    }
-
-    public function connect() {
+    public static function connect(){
         try {
-            $dsn = "mysql:host=" . $this->getHost() . ";dbname=" . $this->getDbname() . ";charset=" . $this->getCharset();
-            $pdo = new PDO($dsn, $this->getUser(), $this->getPass());
+            $dsn = "mysql:host=".self::$host.";dbname=".self::$dbname.";charset=".self::$charset;
+            $pdo = new PDO($dsn, self::$user, self::$pass);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             return $pdo;
