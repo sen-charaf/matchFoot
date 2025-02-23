@@ -13,9 +13,10 @@ class User extends DbConnection implements JsonSerializable
     protected $email;
     protected $password;
     protected $profile_path;
+    protected $profile_image;
     protected $created_at;
 
-    public function __construct($id, $username, $displayed_name, $email, $password, $created_at, $profile_path = null)
+    public function __construct($id, $username, $displayed_name, $email, $password, $created_at, $profile_path = null,$profile_image=null)
     {
 
         $this->id = $id;
@@ -24,6 +25,7 @@ class User extends DbConnection implements JsonSerializable
         $this->email = $email;
         $this->password = $password;
         $this->profile_path = $profile_path;
+        $this->profile_image = $profile_image;
         $this->created_at = $created_at;
     }
 
@@ -38,16 +40,19 @@ class User extends DbConnection implements JsonSerializable
             $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($userData) {
-                return new User(
-                    $pdo,
+                $user = new User(
                     $userData['id'],
                     $userData['username'],
                     $userData['displayed_name'],
                     $userData['email'],
                     $userData['password'],
+                    $userData['created_at'],
                     $userData['profile_path'],
-                    $userData['created_at']
+                    'http://efoot/images?file='.$userData['profile_path']
                 );
+
+                //$user->profile_image = urlencode($user->profile_path);
+                return $user;
             }
         } catch (PDOException $e) {
             $e->getMessage();
@@ -92,7 +97,7 @@ class User extends DbConnection implements JsonSerializable
                                 VALUES (:username, :displayed_name, :email, :password, :profile_path, :created_at)");
             $stmt->execute(['username' => $username, 'displayed_name' => $displayed_name, 'email' => $email, 'password' => $password, 'profile_path' => $profile_path, 'created_at' => $created_at]);
             $id = $pdo->lastInsertId();
-            $user = new User($id, $username, $displayed_name, $email, $password, $profile_path, $created_at);
+            $user = new User($id, $username, $displayed_name, $email, $password,$created_at,$profile_path);
             http_response_code(201);
             return json_encode(['message' => 'User created successfully', 'status' => 201, 'user' => $user]);
         } catch (PDOException $th) {
@@ -131,6 +136,7 @@ class User extends DbConnection implements JsonSerializable
             'displayed_name' => $this->displayed_name,
             'email' => $this->email,
             'profile_path' => $this->profile_path,
+            'profile_image' => $this->profile_image,
             'created_at' => $this->created_at
         ];
     }
