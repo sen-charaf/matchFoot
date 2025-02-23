@@ -2,9 +2,9 @@
 
 class DbConnection {
 
-    static private $host = "localhost:88";
+    static private $host = "db";
     static private $user = "root"; 
-    static private $pass = ""; 
+    static private $pass = "root"; 
     static private $dbname = "efoot";
     static private $charset = "utf8mb4";
 

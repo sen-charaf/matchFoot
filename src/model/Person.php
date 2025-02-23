@@ -4,20 +4,19 @@ require_once __DIR__ . '/../database/connectDB.php';
 class Person {
     protected $pdo;
     protected $id;
-    protected $fistName;
+    protected $firstName;
     protected $lastName;
     protected $birthDate;
     protected $age;
     
-    public function __construct($pdo, $id, $fistName, $lastName, $birthDate){
+    public function __construct($pdo, $id, $firstName, $lastName, $birthDate){
         $this->pdo = $pdo;
         $this->id = $id;
-        $this->fistName = $fistName;
-        $this->lastName = $lastName;
+        $this->fistName = $firstName;
         $this->birthDate = $birthDate;
     }
 
-    public function getAge() {
+        public function getAge() {
         $birthDate = new DateTime($this->birthDate);
         $currentDate = new DateTime();
         $age = $currentDate->diff($birthDate)->y;
