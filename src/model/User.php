@@ -1,20 +1,22 @@
 <?php
 require_once __DIR__ . '/../database/connectDB.php';
 
-class User extends DbConnection implements JsonSerializable
+class User  implements JsonSerializable
 {
+    use DbConnection;
+
     private static $table = 'users';
 
 
 
-    protected $id;
-    protected $username;
-    protected $displayed_name;
-    protected $email;
-    protected $password;
-    protected $profile_path;
-    protected $profile_image;
-    protected $created_at;
+    private $id;
+    private $username;
+    private $displayed_name;
+    private $email;
+    private $password;
+    private $profile_path;
+    private $profile_image;
+    private $created_at;
 
     public function __construct($id, $username, $displayed_name, $email, $password, $created_at, $profile_path = null,$profile_image=null)
     {
@@ -56,7 +58,7 @@ class User extends DbConnection implements JsonSerializable
             }
         } catch (PDOException $e) {
             $e->getMessage();
-            return null;
+            return;
         }
     }
 
@@ -70,15 +72,19 @@ class User extends DbConnection implements JsonSerializable
             $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($userData) {
-                return new User(
+                $user = new User(
                     $userData['id'],
                     $userData['username'],
                     $userData['displayed_name'],
                     $userData['email'],
                     $userData['password'],
+                    $userData['created_at'],
                     $userData['profile_path'],
-                    $userData['created_at']
+                    'http://efoot/images?file='.$userData['profile_path']
                 );
+
+                //$user->profile_image = urlencode($user->profile_path);
+                return $user;
             }
         } catch (PDOException $e) {
             $e->getMessage();

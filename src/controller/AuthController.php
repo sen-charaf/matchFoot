@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../database/connectDB.php';
 require_once __DIR__ . '/../model/User.php';
+require_once __DIR__.'/../helper/UploadFileHelper.php';
 
 class AuthController
 {
@@ -13,8 +13,8 @@ class AuthController
             isset($_POST['username']) ? $username = trim($_POST['username']) : $username = '';
             isset($_POST['displayed_name']) ? $displayed_name = trim($_POST['displayed_name']) : $displayed_name = '';
             isset($_POST['email']) ? $email = trim($_POST['email']) : $email = '';
-            isset($_POST['password']) ? $password = trim($_POST['password']) : $password = '';
-            isset($_POST['confirm_password']) ? $confirm_password = trim($_POST['confirm_password']) : $confirm_password = '';
+            isset($_POST['password']) ? $password = $_POST['password'] : $password = '';
+            isset($_POST['confirm_password']) ? $confirm_password = $_POST['confirm_password'] : $confirm_password = '';
 
 
 
@@ -39,45 +39,10 @@ class AuthController
 
 
             if (isset($_FILES["profile_image"])) {
-                if ($_FILES["profile_image"]["error"] !== UPLOAD_ERR_OK) {
-                    http_response_code(400);
-                    echo json_encode(['message' => 'Image Upload Failed', 'status' => 400]);
-                    return;
-                }
+                
                 $image = $_FILES["profile_image"];
-
                 $uploadDir = __DIR__ . "/../public/uploads/profiles/";
-                // echo json_encode($uploadDir);
-                // exit;
-
-
-
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0777, true);
-                }
-                $fileName = basename($image['name']);
-                $fileTmpPath = $image['tmp_name'];
-                $fileSize = $image['size'];
-                $fileType = $image['type'];
-
-                $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-
-                if (!in_array($fileType, $allowedTypes)) {
-                    http_response_code(400);
-                    echo json_encode(['message' => 'Invalid file type. Only JPG and PNG allowed.', 'status' => 400]);
-                    exit;
-                }
-
-                $newFileName = time() . "_" . uniqid() . "_" . $fileName;
-
-                $destination = $uploadDir . $newFileName;
-
-                if (!move_uploaded_file($fileTmpPath, $destination)) {
-                    echo json_encode(['message' => 'Failed to move uploaded file.', 'status' => 500]);
-                    exit;
-                }
-
-                $profile_path = $newFileName;
+                $profile_path = uploadImage($image,$uploadDir);
             }
 
             //$profile_path = "";

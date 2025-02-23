@@ -1,6 +1,6 @@
 <?php
 
-class DbConnection{
+trait DbConnection{
 
     static private $host = "localhost:88";
     static private $user = "root"; 
