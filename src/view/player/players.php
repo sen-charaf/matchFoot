@@ -3,25 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" href="./../styles/output.css">
+    <link rel="stylesheet" href="./../styles/output.css">
+    <link rel="stylesheet" href="./../../../assets/icons/fontawesome/css/all.min.css">
 
-    <style>
-        :root
-        {
-            --main-color: #000;
-            --secondary-color: #ACACAC;
-            --main-bg-color: #A99567;
-        }
-    </style>
+    <title>Player Management</title>
+
 </head>
-    <div class="container felx  flex-column ml-7">
+<body>
+    <div class="container flex-column ml-7" 
+    >
         <div class="p-5 bg-white rounded-lg">
-            <h1 class="pl-3 mb-5 text-2xl font-bold text-gray-800">OPERATIONS CRUD</h1>
+            <h1 class="pl-3 mb-5 text-2xl font-bold text-gray-800 border-l-3 border-l-[var(--main-bg-color)]">OPERATIONS CRUD</h1>
         </div>
 
             <div class="add-players flex justify-between items-center mb-5">
-                <h1 class="text-xl font-semibold text-gray-700">Listes des Joueurs</h1>
+                <h1 class="text-xl font-semibold text-gray-700 border-l-3 border-l-[var(--main-bg-color)] pl-1">Listes des Joueurs</h1>
                 <button class="bg-[var(--main-bg-color)] text-white px-4 py-2 rounded-lg hover:bg-[var(--secondary-color)] hover:text-[var(--main-bg-color)] transition duration-300">
                     <a href="addPlayer.php">Ajouter un joueur</a>
                 </button>
@@ -38,8 +35,7 @@
                     <th class="px-4 py-2">Poid</th>
                     <th class="px-4 py-2">Taille</th>
                     <th class="px-4 py-2">Equip</th>
-                    <th class="px-4 py-2">Supprimer</th>
-                    <th class="px-4 py-2">Modifier</th>
+
                 </tr>
             </thead>
             <tbody class="">
@@ -48,7 +44,7 @@
                 use controllers\PlayerController;
 
                 foreach(PlayerController::getAll() as $player): ?>
-                <tr class="hover:bg-gray-100  transition duration-300 ease-in-out">
+                <tr class="hover:bg-gray-100 transition duration-300 ease-in-out">
                     <td class="pt-5  text-center"><?php echo $player['id_joueur']; ?></td>
                     <td class="pt-5  text-center"><?php echo $player['nom']; ?></td>
                     <td class="pt-5  text-center"><?php echo $player['prenom']; ?></td>
@@ -57,8 +53,14 @@
                     <td class="pt-5  text-center"><?php echo $player['poid']; ?></td>
                     <td class="pt-5  text-center"><?php echo $player['taille']; ?></td>
                     <td class="pt-5  text-center"><?php echo $player['equip']; ?></td>
-                    <td class="pt-5  text-center"><button class="text-red-600 hover:text-red-800"><a href="DeletePlayer.php?id=<?php echo $player['id_joueur']?>">Supprimer</a></button></td>
-                    <td class="pt-5  text-center"><button class="text-blue-600 hover:text-blue-800">Modifier</button></td>
+                    
+                    <td class="pt-5  text-center">
+                        <div class="flex justify-between border border-[var(--main-bg-color)] rounded-[7px] px-1">
+                            <button class="text-[var(--main-bg-color)] hover:text-[var(--secondary-color)]"><a href="DeletePlayer.php?id=<?php echo $player['id_joueur']?>"><i class="fa-solid fa-trash " ></i></a></button>
+                            <button class="text-[var(--main-bg-color)] hover:text-[var(--secondary-color)]"><a href="modefyPlayer.php?id=<?php echo $player['id_joueur']?>"><i class="fa-solid fa-pen " ></i></a></button>
+                        </div>
+                    </td>
+                    <td class="pt-5  text-center"></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
