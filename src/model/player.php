@@ -107,6 +107,7 @@ class Player extends Person
             $photoPath,  // photoPath
             $idPlayer   // id_joueur
         ]);
+
     }
 
     // DELETE

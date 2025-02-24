@@ -15,7 +15,7 @@ class PlayerController
     
     public function __construct(/*PDO $pdo = DbConnection::connect()*/)
     {
-        // $this->player = new Player("", "", "", 0, 0, "", "", 0);
+        $this->player = new Player("", "", "", 0, 0, "", "", 0);
         // $this->player->setPDO($pdo);
     }
 
@@ -81,7 +81,7 @@ class PlayerController
         $data = $_POST;
 
         if (!isset($data['id_joueur']) || !$this->validatePlayerData($data)) {
-            return (["error" => "Invalid input"]);
+            return false;
         }
 
         return  $this->player->update(
@@ -128,7 +128,7 @@ class PlayerController
             !is_string($data['photoPath']) || empty(trim($data['photoPath'])) || // 'photoPath' must be a non-empty string
             !is_string($data['equip']) || empty(trim($data['equip'])) // 'equip' must be a non-empty string
         ) {
-            return false;
+            return true ;
         }
     
         // Additional validations (if needed)
