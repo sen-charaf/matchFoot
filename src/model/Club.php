@@ -18,6 +18,7 @@ class Club implements JsonSerializable
     private $founded_at;
     private $created_at;
 
+    
 
     public function __construct($id, $name, $nickname, $founded_at, $created_at, $logo = null, $logo_path = null, $trainer = null, $stadium = null)
     {
