@@ -1,9 +1,9 @@
 <?php
 
-use controllers\PlayerController;
+require __DIR__ . "/src/model/player.php";
+use player\Player;
 
-    require("./src/controller/palyerController.php");
-    echo "<pre>";
-    PlayerController::getAllPlayers();
-    echo "</pre>";
+
+
+    $player = new Player("maroruane","elmoujahid","2000-07-21",88,1.94,"D","dsd",9);
 ?>

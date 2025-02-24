@@ -57,7 +57,7 @@
                     <td class="pt-5  text-center"><?php echo $player['poid']; ?></td>
                     <td class="pt-5  text-center"><?php echo $player['taille']; ?></td>
                     <td class="pt-5  text-center"><?php echo $player['equip']; ?></td>
-                    <td class="pt-5  text-center"><button class="text-red-600 hover:text-red-800">Supprimer</button></td>
+                    <td class="pt-5  text-center"><button class="text-red-600 hover:text-red-800"><a href="DeletePlayer.php?id=<?php echo $player['id_joueur']?>">Supprimer</a></button></td>
                     <td class="pt-5  text-center"><button class="text-blue-600 hover:text-blue-800">Modifier</button></td>
                 </tr>
                 <?php endforeach; ?>

@@ -47,7 +47,7 @@ class Player extends Person
         $this->equip = $equip;
 
         // Call the parent constructor (PDO already exists in Person)
-        parent::__construct(null, null,$firstName, $lastName, $birthDate);
+        parent::__construct(DbConnection::connect(), null,$firstName, $lastName, $birthDate);
     }
 
 
@@ -55,13 +55,9 @@ class Player extends Person
     // CREATE
     public function create(): bool
     {
-        $query = "INSERT INTO joueur (nom, prenom, date_naissance, pied, poid, taille, equip, photoPath) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO joueur(nom, prenom, date_naissance, pied, poid, taille, equip, photoPath) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
         $stmt = $this->pdo->prepare($query);
 
-        // debug remove
-        echo "FirstName:". $this->firstName;
-        echo " <br>lastname:". $this->lastName;
-        // echo ":". $this->lastName;
 
         try{
             return $stmt->execute([
@@ -114,12 +110,12 @@ class Player extends Person
     }
 
     // DELETE
-    public function delete(int $idPlayer): bool
+    public static function delete(int $idPlayer): bool
     {
-        if (!$this->isExist($idPlayer)) return false;
+        if (!self::isExist($idPlayer)) return false;
 
         $query = "DELETE FROM joueur WHERE id_joueur=?";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = DbConnection::connect()->prepare($query);
         return $stmt->execute([$idPlayer]);
     }
 
@@ -182,11 +178,11 @@ class Player extends Person
     }
 
 
-    public function searchByTeam(string $team): array
+    public function searchByClub(string $club): array
     {
         $query = "SELECT * FROM joueur WHERE equip LIKE ?";
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute(["%$team%"]);
+        $stmt->execute(["%$club%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }    
 
@@ -205,14 +201,14 @@ class Player extends Person
     
     }
 
-    // count the players of a team
-    public function countTeam(string $team): int
+    // count the players of a club
+    public function countClub(string $club): int
     {
-        if(!isset($team)) return 0;
+        if(!isset($club)) return 0;
 
         $query = "SELECT count(*)  as player_count FROM joueur  WHERE equip='?'";
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([$team]);
+        $stmt->execute([$club]);
         $stmt->fetch(PDO::FETCH_ASSOC);
         return $stmt['player_count'];
     }

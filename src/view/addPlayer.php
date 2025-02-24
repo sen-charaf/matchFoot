@@ -3,18 +3,21 @@
     require __DIR__ . "/../controller/palyerController.php";
 
 
+    
     use controllers\PlayerController;
-
     $player = new PlayerController(DbConnection::connect());
 
-    if($player->create())
+    if($player->validatePlayerData($_POST))
     {
-        echo "<h1>joueur est ajouter<h1>";
-    }
-    else
-    {
-        echo "<h1>joueur n'est pas ajouter<h1>";
 
+        if($player->create())
+        {
+            echo "<h1>joueur est ajouter<h1>";
+        }
+        else
+        {
+            echo "<h1>joueur n'est pas ajouter<h1>";
+        }
     }
 
 

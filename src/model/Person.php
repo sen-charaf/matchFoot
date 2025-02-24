@@ -18,6 +18,7 @@ class Person {
         $this->pdo = $pdo;
         $this->id = $id;
         $this->firstName = $firstName;
+        $this->lastName = $lastName;
         $this->birthDate = $birthDate;
     }
 
