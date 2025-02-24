@@ -1,8 +1,6 @@
 <?php
 
-    require __DIR__ . "/../controller/palyerController.php";
-
-
+    require __DIR__ . "/../../controller/palyerController.php";
     
     use controllers\PlayerController;
     $player = new PlayerController(DbConnection::connect());
@@ -34,7 +32,7 @@
     <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
         <h1 class="text-2xl font-bold mb-5 text-center">Ajouter un joueur</h1>
         <form method="POST" action="">
-            <div class="mb-4">
+            <div class="mb-4 ">
                 <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
                 <input type="text" name="nom" id="nom" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
             </div>

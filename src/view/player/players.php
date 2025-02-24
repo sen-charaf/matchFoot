@@ -44,10 +44,10 @@
             </thead>
             <tbody class="">
                 <?php
-                require __DIR__ . "/../controller/palyerController.php";
+                require __DIR__ . "/../../controller/palyerController.php";
                 use controllers\PlayerController;
 
-                foreach(PlayerController::getAllPlayers() as $player): ?>
+                foreach(PlayerController::getAll() as $player): ?>
                 <tr class="hover:bg-gray-100  transition duration-300 ease-in-out">
                     <td class="pt-5  text-center"><?php echo $player['id_joueur']; ?></td>
                     <td class="pt-5  text-center"><?php echo $player['nom']; ?></td>

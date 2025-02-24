@@ -125,8 +125,6 @@ class Player extends Person
         if( $page < 1 ) $page=1;
         
         if( $perPage < 1 )    $perPage = 20;
-
-
         $offset = ($page - 1) * $perPage;
 
         $query = "SELECT * FROM joueur LIMIT :perPage OFFSET :offset";
@@ -139,10 +137,10 @@ class Player extends Person
     }
 
     // read single player by id
-    public function getById(int $idPlayer): ?array
+    public static  function getById(int $idPlayer): ?array
     {
         $query = "SELECT * FROM joueur WHERE id_joueur=?";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = DbConnection::connect()->prepare($query);
         $stmt->execute([$idPlayer]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     } 

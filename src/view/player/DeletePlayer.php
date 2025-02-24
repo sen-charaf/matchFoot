@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . "/../controller/palyerController.php";
+require __DIR__ . "/../../controller/palyerController.php";
 
 use controllers\PlayerController;
 

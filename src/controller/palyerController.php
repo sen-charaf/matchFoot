@@ -19,7 +19,7 @@ class PlayerController
         // $this->player->setPDO($pdo);
     }
 
-    public static function  getAllPlayers() : array
+    public static function  getAll() : array
     {
         $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
         $perPage = isset($_GET['per_page']) ? intval($_GET['per_page']) : 20;
@@ -28,20 +28,20 @@ class PlayerController
     }
 
 
-    public function getById(): array
+    public static function getById(): array
     {
         if (!isset($_GET['id'])) {
-            return ["error" => "ID is required"];
+            return [];
             
         }
 
         $idPlayer = intval($_GET['id']);
-        $player = $this->player->getById($idPlayer);
+        $player = Player::getById($idPlayer);
 
         if ($player) {
             return $player;
         } else {
-            return ["error" => "Player not found"];
+            return [];
         }
     }
 

@@ -4,7 +4,7 @@ namespace person;
 
 require_once __DIR__ . '/../database/connectDB.php';
 use DateTime;
-
+use DbConnection;
 
 class Person {
     protected $pdo;
@@ -15,7 +15,7 @@ class Person {
     protected $age;
     
     public function __construct($pdo, $id, $firstName, $lastName, $birthDate){
-        $this->pdo = $pdo;
+        $this->pdo = $pdo ?? DbConnection::connect();
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
