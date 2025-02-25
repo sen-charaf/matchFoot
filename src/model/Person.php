@@ -1,23 +1,28 @@
 <?php
+
+namespace person;
+
 require_once __DIR__ . '/../database/connectDB.php';
+use DateTime;
+use DbConnection;
 
 class Person {
     protected $pdo;
     protected $id;
-    protected $fistName;
+    protected $firstName;
     protected $lastName;
     protected $birthDate;
     protected $age;
     
-    public function __construct($pdo, $id, $fistName, $lastName, $birthDate){
-        $this->pdo = $pdo;
+    public function __construct($pdo, $id, $firstName, $lastName, $birthDate){
+        $this->pdo = $pdo ?? DbConnection::connect();
         $this->id = $id;
-        $this->fistName = $fistName;
+        $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->birthDate = $birthDate;
     }
 
-    public function getAge() {
+        public function getAge() {
         $birthDate = new DateTime($this->birthDate);
         $currentDate = new DateTime();
         $age = $currentDate->diff($birthDate)->y;
