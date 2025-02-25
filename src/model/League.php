@@ -4,6 +4,8 @@ namespace League;
 
 use DbConnection;
 use PDO;
+use PDOException;
+
 require __DIR__ . "/../database/connectDB.php";
 
 class League {
@@ -24,14 +26,7 @@ class League {
 
     public static function  create(string $name, int $clubsCount, string $leagueLogoPath, int $roundCount):bool
     {
-        // CREATE TABLE `tournoies` (
-        //     `id` int NOT NULL AUTO_INCREMENT,
-        //     `nom` varchar(30) NOT NULL,
-        //     `nbr_equipes` int NOT NULL,
-        //     `logo_path` varchar(200) DEFAULT NULL,
-        //     `nbr_round` int DEFAULT '1',
-        //     PRIMARY KEY (`id`)
-        //   );
+
         $stmt = DbConnection::connect()->prepare("INSERT INTO tournoies (nom,nbr_equipes, logo_path, nbr_round)
                                                 VALUES (:name, :clubsCount , :leagueLogoPath, :roundCount)");
         $stmt->bindParam(':name', $name);
@@ -44,9 +39,16 @@ class League {
 
     public static function delete(int $id): bool
     {
-        $stmt = DbConnection::connect()->prepare("DELETE FROM league WHERE id = :id");
-        $stmt->bindParam(':id', $id);
-        return $stmt->execute();
+        try
+        {
+            $stmt = DbConnection::connect()->prepare("DELETE FROM tournoies WHERE id = :id");
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+            return true;
+        }catch (PDOException $e)
+        {
+            return false;
+        }
     }
 
     public static function update(int $id, string $name, string $leagueLogoPath, int $roundCount): bool

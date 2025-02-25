@@ -1,6 +1,10 @@
 <?php
+
+use controllers\LeagueController;
+
 include __DIR__ . "/../../controller/LeagueController.php";
-$leagues = LeagueController::getAll();
+
+    $leagues = LeagueController::getAll();
 ?>
 
 <!DOCTYPE html>
@@ -15,7 +19,11 @@ $leagues = LeagueController::getAll();
 </head>
 <body>
 
-    <div class="container flex-column ml-7">
+    <div
+         class="flex justify-center items-center h-screen "
+    >
+
+    <div class="container  flex-colum ">
         <div class="p-5 bg-white rounded-lg">
             <h1 class="pl-3 mb-5 text-2xl font-bold text-gray-800 border-l-3 border-l-[var(--main-bg-color)]">LEAGUES MANAGEMENT</h1>
         </div>
@@ -23,7 +31,7 @@ $leagues = LeagueController::getAll();
         <div class="add-league flex justify-between items-center mb-5">
             <h1 class="text-xl font-semibold text-gray-700 border-l-3 border-l-[var(--main-bg-color)] pl-1">List of Leagues</h1>
             <button class="bg-[var(--main-bg-color)] text-white px-4 py-2 rounded-lg hover:bg-[var(--secondary-color)] hover:text-[var(--main-bg-color)] transition duration-300">
-                <a href="addLeague.php">Add League</a>
+                <a href="CreateLeague.php">Add League</a>
             </button>
         </div>
 
@@ -52,10 +60,10 @@ $leagues = LeagueController::getAll();
                     <td class="pt-5 text-center">
                         <div class="flex justify-between border border-[var(--main-bg-color)] rounded-[7px] px-1">
                             <button class="text-[var(--main-bg-color)] hover:text-[var(--secondary-color)]">
-                                <a href="deleteLeague.php?id=<?= $league['id'] ?>"><i class="fa-solid fa-trash"></i></a>
+                                <a href="DeleteLeague.php?id=<?= $league['id'] ?>"><i class="fa-solid fa-trash"></i></a>
                             </button>
                             <button class="text-[var(--main-bg-color)] hover:text-[var(--secondary-color)]">
-                                <a href="editLeague.php?id=<?= $league['id'] ?>"><i class="fa-solid fa-pen"></i></a>
+                                <a href="UpdateLeague.php?id=<?= $league['id'] ?>"><i class="fa-solid fa-pen"></i></a>
                             </button>
                         </div>
                     </td>
@@ -63,6 +71,7 @@ $leagues = LeagueController::getAll();
                 <?php endforeach; ?>
             </tbody>
         </table>
+    </div>
     </div>
 
 </body>

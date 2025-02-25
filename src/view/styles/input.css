@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
 :root {
-    --main-color: #000;
-    --secondary-color: #acacac;
-    --main-bg-color: #a99567;
+    --text-color: #060907;
+    --primary-color: #44bb4e;
+    --secondary-color: #94e699;
+    --accent-color: #5de967;
+    --bg-color: #94e699;
+    --main-bg-color: #44bb4e;
 }
 
 /* Import Montserrat font from Google Fonts */
@@ -13,7 +16,7 @@
 body {
     font-family: "Montserrat", sans-serif;
     /* font-style: italic; */
-    font-weight:lighter; /* Semi Bold */
+    font-weight: lighter; /* Semi Bold */
 }
 
 /* Run the command in \matchFoot\src\view to update tailwind live */
