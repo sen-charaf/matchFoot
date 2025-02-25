@@ -2,7 +2,7 @@
 
 trait DbConnection{
 
-    static private $host = "localhost:88";
+    static private $host = "localhost";
     static private $user = "root"; 
     static private $pass = ""; 
     static private $dbname = "efoot";
