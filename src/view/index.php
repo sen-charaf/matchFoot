@@ -18,6 +18,7 @@ $routes = [
         '/create_club' => [ClubController::class, 'store']
     ],
     'GET' => [
+        '/club_list' => [ClubController::class, 'index'],
         '/logout' => [AuthController::class, 'logout'],
         '/getUser' => function () {
             $userId = $_GET['id'] ?? null;
@@ -71,7 +72,7 @@ if (isset($routes[$requestMethod][$requestUri])) {
 }
 
 // 404 Response
-jsonResponse(['message' => '404 - Page not found', 'requested_url' => $requestUri], 404);
+//jsonResponse(['message' => '404 - Page not found', 'requested_url' => $requestUri], 404);
 
 // Helper function to send JSON responses
 // function jsonResponse($data, $statusCode = 200)

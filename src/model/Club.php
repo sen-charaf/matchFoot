@@ -33,6 +33,19 @@ class Club implements JsonSerializable
         $this->stadium = $stadium;
     }
 
+    public static function getAllClubs()
+    {
+        try {
+            $table = self::$table;
+            $pdo = self::connect();
+            $stmt = $pdo->prepare("SELECT * FROM `$table`");
+            $stmt->execute();
+            $clubs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $clubs;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
 
     public static function getClubDataById($id)
     {
@@ -80,6 +93,40 @@ class Club implements JsonSerializable
         } catch (PDOException $th) {
             
             throw $th;
+            return;
+        }
+    }
+
+    public static function update($id, $name, $nickname, $logo_path, $trainer_id, $stad_id, $founded_at, $created_at)
+    {
+        try {
+            $pdo = self::connect();
+            $table = self::$table;
+    
+            $stmt = $pdo->prepare("
+                UPDATE `$table` 
+                SET nom = :name, nickname = :nickname, logo_path = :logo_path, entraineur_id = :trainer_id, stad_id = :stad_id, founded_at = :founded_at, created_at = :created_at 
+                WHERE id = :id
+            ");
+    
+            $stmt->execute([
+                'name' => $name,
+                'nickname' => $nickname,
+                'logo_path' => $logo_path,
+                'trainer_id' => $trainer_id,
+                'stad_id' => $stad_id,
+                'founded_at' => $founded_at,
+                'created_at' => $created_at,
+                'id' => $id
+            ]);
+    
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            throw $e;
             return;
         }
     }
@@ -166,5 +213,19 @@ class Club implements JsonSerializable
     public function getCreatedAt()
     {
         return $this->created_at;
+    }
+
+    public function __get($name)
+    {
+        if (property_exists($this, $name)) {
+            return $this->$name;
+        }
+    }
+
+    public function __set($name, $value)
+    {
+        if (property_exists($this, $name)) {
+            $this->$name = $value;
+        }
     }
 }
