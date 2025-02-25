@@ -10,3 +10,13 @@ CREATE TABLE IF NOT EXISTS joueur
     equip INT NOT NULL,
     photoPath char(50)
 );
+
+
+CREATE TABLE `tournoies` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nom` varchar(30) NOT NULL,
+  `nbr_equipes` int NOT NULL,
+  `logo_path` varchar(200) DEFAULT NULL,
+  `nbr_round` int DEFAULT '1',
+  PRIMARY KEY (`id`)
+);
