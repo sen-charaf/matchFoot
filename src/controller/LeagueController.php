@@ -1,7 +1,9 @@
 <?php
 
+namespace controllers;
 include __DIR__ . "/../model/League.php";
 use League\League;
+use PDO;
 
 class LeagueController 
 {
@@ -72,7 +74,7 @@ class LeagueController
         return League::update($data['id'], $data['name'], $data['leagueLogoPath'], $data['roundCount']);
     }
 
-    public function delete(): bool
+    public static function delete(): bool
     {
         if (!isset($_GET['id'])) {
             return false;
@@ -80,11 +82,11 @@ class LeagueController
 
         $idLeague = intval($_GET['id']);
         return League::delete($idLeague);
+
     }
-
-    private function validateLeagueData(array $data): bool
+    public function validateLeagueData(): bool
     {
-
+        $data = $_POST;
         return isset($data['name']) && isset($data['clubsCount']) && isset($data['leagueLogoPath']) && isset($data['roundCount']);
     }
 

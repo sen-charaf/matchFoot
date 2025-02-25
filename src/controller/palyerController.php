@@ -110,8 +110,9 @@ class PlayerController
 
     }
 
-    public function validatePlayerData(array $data): bool
+    public function validatePlayerData(): bool
     {
+        $data = $_POST;
         // Check if all required fields are present
         if (!isset($data['nom'], $data['prenom'], $data['date_naissance'], $data['poid'], $data['taille'], $data['pied'], $data['photoPath'], $data['equip'])) {
             return false;

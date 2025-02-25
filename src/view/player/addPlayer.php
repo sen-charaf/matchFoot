@@ -5,7 +5,7 @@
     use controllers\PlayerController;
     $player = new PlayerController(DbConnection::connect());
 
-    if($player->validatePlayerData($_POST))
+    if($player->validatePlayerData())
     {
 
         if($player->create())
