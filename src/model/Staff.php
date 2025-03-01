@@ -56,7 +56,6 @@ class Staff extends Person implements JsonSerializable
         }, $result);
     }
     
-
     public static function getStaffDataById($id)
     {
         try {
@@ -136,7 +135,6 @@ class Staff extends Person implements JsonSerializable
         }
     }
 
-
     public function jsonSerialize(): array
     {
         return [
@@ -147,8 +145,6 @@ class Staff extends Person implements JsonSerializable
             'role' => $this->role
         ];
     }
-
-
 
     public function getId()
     {

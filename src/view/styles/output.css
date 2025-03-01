@@ -692,61 +692,18 @@
       max-width: 96rem !important;
     }
   }
-<<<<<<< HEAD
-  .m-0 {
-    margin: calc(var(--spacing) * 0);
-=======
-  .m-5 {
-    margin: calc(var(--spacing) * 5);
-  }
   .mx-auto {
     margin-inline: auto;
->>>>>>> charaf
   }
-  .my-5 {
-    margin-block: calc(var(--spacing) * 5);
-  }
-<<<<<<< HEAD
-=======
   .my-auto {
     margin-block: auto;
   }
->>>>>>> charaf
-  .mt-4 {
-    margin-top: calc(var(--spacing) * 4);
-  }
-  .mt-6 {
-    margin-top: calc(var(--spacing) * 6);
-  }
-<<<<<<< HEAD
-  .mt-12 {
-    margin-top: calc(var(--spacing) * 12);
-  }
-  .mr-5 {
-    margin-right: calc(var(--spacing) * 5);
-=======
   .mt-10 {
     margin-top: calc(var(--spacing) * 10);
->>>>>>> charaf
-  }
-  .mb-2 {
-    margin-bottom: calc(var(--spacing) * 2);
-  }
-  .mb-4 {
-    margin-bottom: calc(var(--spacing) * 4);
   }
   .mb-5 {
     margin-bottom: calc(var(--spacing) * 5);
   }
-<<<<<<< HEAD
-  .mb-6 {
-    margin-bottom: calc(var(--spacing) * 6);
-  }
-  .mb-12 {
-    margin-bottom: calc(var(--spacing) * 12);
-  }
-=======
->>>>>>> charaf
   .box-border {
     box-sizing: border-box;
   }
@@ -836,27 +793,12 @@
   }
   .h-10 {
     height: calc(var(--spacing) * 10);
-<<<<<<< HEAD
-=======
-  }
-  .h-\[100\%\] {
-    height: 100%;
-  }
-  .h-\[100vh\] {
-    height: 100vh;
-  }
-  .h-dvh {
-    height: 100dvh;
   }
   .h-full {
     height: 100%;
->>>>>>> charaf
   }
   .h-screen {
     height: 100vh;
-  }
-  .max-h-96 {
-    max-height: calc(var(--spacing) * 96);
   }
   .max-h-none {
     max-height: none;
@@ -867,74 +809,27 @@
   .min-h-screen {
     min-height: 100vh;
   }
-  .w-1 {
-    width: calc(var(--spacing) * 1);
-  }
   .w-1\/2 {
     width: calc(1/2 * 100%);
   }
-<<<<<<< HEAD
-  .w-1\/3 {
-    width: calc(1/3 * 100%);
-  }
-  .w-4 {
-    width: calc(var(--spacing) * 4);
-  }
-  .w-4\/5 {
-    width: calc(4/5 * 100%);
-  }
-  .w-5 {
-    width: calc(var(--spacing) * 5);
-  }
-  .w-5\/6 {
-    width: calc(5/6 * 100%);
-=======
   .w-10 {
     width: calc(var(--spacing) * 10);
->>>>>>> charaf
   }
   .w-72 {
     width: calc(var(--spacing) * 72);
   }
-  .w-96 {
-    width: calc(var(--spacing) * 96);
-  }
-<<<<<<< HEAD
-  .w-\[70\%\] {
-    width: 70%;
-  }
-=======
   .w-\[32rem\] {
     width: 32rem;
-  }
-  .w-\[70\%\] {
-    width: 70%;
-  }
-  .w-\[90\%\] {
-    width: 90%;
-  }
-  .w-\[95\%\] {
-    width: 95%;
   }
   .w-\[98\%\] {
     width: 98%;
   }
-  .w-\[100\%\] {
-    width: 100%;
-  }
->>>>>>> charaf
   .w-full {
     width: 100%;
   }
   .w-screen {
     width: 100vw;
   }
-<<<<<<< HEAD
-  .max-w-lg {
-    max-width: var(--container-lg);
-  }
-=======
->>>>>>> charaf
   .max-w-none {
     max-width: none;
   }
@@ -1074,9 +969,6 @@
   }
   .animate-none {
     animation: none;
-  }
-  .cursor-pointer {
-    cursor: pointer;
   }
   .touch-pinch-zoom {
     --tw-pinch-zoom: pinch-zoom;
@@ -1435,13 +1327,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-<<<<<<< HEAD
-  .overflow-y-auto {
-    overflow-y: auto;
-=======
   .overflow-hidden {
     overflow: hidden;
->>>>>>> charaf
   }
   .scroll-auto {
     scroll-behavior: auto;
@@ -1451,6 +1338,9 @@
   }
   .rounded {
     border-radius: 0.25rem;
+  }
+  .rounded-full {
+    border-radius: calc(infinity * 1px);
   }
   .rounded-lg {
     border-radius: var(--radius-lg);
@@ -1542,10 +1432,6 @@
     border-left-style: var(--tw-border-style);
     border-left-width: 1px;
   }
-  .border-l-4 {
-    border-left-style: var(--tw-border-style);
-    border-left-width: 4px;
-  }
   .border-dashed {
     --tw-border-style: dashed;
     border-style: dashed;
@@ -1570,12 +1456,6 @@
     --tw-border-style: solid;
     border-style: solid;
   }
-  .border-blue-500 {
-    border-color: var(--color-blue-500);
-  }
-  .border-gray-300 {
-    border-color: var(--color-gray-300);
-  }
   .bg-\(--my_variable\) {
     background-color: var(--my_variable);
   }
@@ -1591,46 +1471,14 @@
   .bg-\[color\:var\(--my-color\)\] {
     background-color: var(--my-color);
   }
-  .bg-\[var\(--bg-color\)\] {
-    background-color: var(--bg-color);
-  }
   .bg-\[var\(--my_variable\)\] {
     background-color: var(--my_variable);
   }
-  .bg-\[var\(--primary-color\)\] {
-    background-color: var(--primary-color);
-  }
-  .bg-\[var\(--secondary-color\)\] {
-    background-color: var(--secondary-color);
-  }
-  .bg-amber-200 {
-    background-color: var(--color-amber-200);
-  }
-  .bg-amber-300 {
-    background-color: var(--color-amber-300);
-  }
-  .bg-blue-500 {
-    background-color: var(--color-blue-500);
-  }
-<<<<<<< HEAD
-  .bg-gray-100 {
-    background-color: var(--color-gray-100);
-  }
-=======
->>>>>>> charaf
   .bg-gray-200 {
     background-color: var(--color-gray-200);
   }
-  .bg-green-200 {
-    background-color: var(--color-green-200);
-  }
-<<<<<<< HEAD
-  .bg-orange-700 {
-    background-color: var(--color-orange-700);
-=======
   .bg-green-700 {
     background-color: var(--color-green-700);
->>>>>>> charaf
   }
   .bg-red-500 {
     background-color: var(--color-red-500);
@@ -1810,31 +1658,14 @@
   .object-top {
     object-position: top;
   }
-  .p-0 {
-    padding: calc(var(--spacing) * 0);
-  }
   .p-1 {
     padding: calc(var(--spacing) * 1);
   }
-  .p-1\.5 {
-    padding: calc(var(--spacing) * 1.5);
-  }
-  .p-2 {
-    padding: calc(var(--spacing) * 2);
-  }
-<<<<<<< HEAD
-  .p-2\.5 {
-    padding: calc(var(--spacing) * 2.5);
-=======
   .p-5 {
     padding: calc(var(--spacing) * 5);
->>>>>>> charaf
   }
   .p-6 {
     padding: calc(var(--spacing) * 6);
-  }
-  .p-20 {
-    padding: calc(var(--spacing) * 20);
   }
   .px-3 {
     padding-inline: calc(var(--spacing) * 3);
@@ -1842,12 +1673,9 @@
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
   }
-<<<<<<< HEAD
-=======
   .px-5 {
     padding-inline: calc(var(--spacing) * 5);
   }
->>>>>>> charaf
   .px-10 {
     padding-inline: calc(var(--spacing) * 10);
   }
@@ -1860,19 +1688,11 @@
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
   }
-<<<<<<< HEAD
   .pt-5 {
     padding-top: calc(var(--spacing) * 5);
   }
-  .pl-2 {
-    padding-left: calc(var(--spacing) * 2);
-  }
-  .pl-2\.5 {
-    padding-left: calc(var(--spacing) * 2.5);
-=======
   .pl-3 {
     padding-left: calc(var(--spacing) * 3);
->>>>>>> charaf
   }
   .text-center {
     text-align: center;
@@ -1938,10 +1758,6 @@
   .font-medium {
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
-  }
-  .font-semibold {
-    --tw-font-weight: var(--font-weight-semibold);
-    font-weight: var(--font-weight-semibold);
   }
   .text-balance {
     text-wrap: balance;
@@ -2016,38 +1832,21 @@
   .\[color\:red\]\/50\! {
     color: color-mix(in oklab, red 50%, transparent) !important;
   }
-  .text-\[var\(--primary-color\)\] {
-    color: var(--primary-color);
-  }
-  .text-\[var\(--text-color\)\] {
-    color: var(--text-color);
-  }
   .text-blue-500 {
     color: var(--color-blue-500);
   }
-<<<<<<< HEAD
   .text-blue-600 {
     color: var(--color-blue-600);
   }
-  .text-gray-700 {
-    color: var(--color-gray-700);
-  }
-  .text-green-500 {
-    color: var(--color-green-500);
-=======
   .text-gray-800 {
     color: var(--color-gray-800);
->>>>>>> charaf
   }
   .text-red-500 {
     color: var(--color-red-500);
   }
-<<<<<<< HEAD
   .text-red-600 {
     color: var(--color-red-600);
   }
-=======
->>>>>>> charaf
   .text-white {
     color: var(--color-white);
   }
@@ -2345,10 +2144,6 @@
     --tw-duration: 300ms;
     transition-duration: 300ms;
   }
-  .duration-500 {
-    --tw-duration: 500ms;
-    transition-duration: 500ms;
-  }
   .ease-in {
     --tw-ease: var(--ease-in);
     transition-timing-function: var(--ease-in);
@@ -2510,38 +2305,10 @@
   .transform-view {
     transform-box: view-box;
   }
-<<<<<<< HEAD
-  .hover\:scale-105 {
-    &:hover {
-      @media (hover: hover) {
-        --tw-scale-x: 105%;
-        --tw-scale-y: 105%;
-        --tw-scale-z: 105%;
-        scale: var(--tw-scale-x) var(--tw-scale-y);
-      }
-    }
-  }
-=======
->>>>>>> charaf
   .hover\:bg-\[\#73ff7d\] {
     &:hover {
       @media (hover: hover) {
         background-color: #73ff7d;
-      }
-    }
-  }
-  .hover\:bg-\[var\(--accent-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--accent-color);
-      }
-    }
-  }
-<<<<<<< HEAD
-  .hover\:bg-blue-700 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-blue-700);
       }
     }
   }
@@ -2566,24 +2333,10 @@
       }
     }
   }
-  .hover\:text-white {
-    &:hover {
-      @media (hover: hover) {
-        color: var(--color-white);
-      }
-    }
-  }
-=======
->>>>>>> charaf
   .focus\:ring-2 {
     &:focus {
       --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentColor);
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    }
-  }
-  .focus\:ring-\[var\(--primary-color\)\] {
-    &:focus {
-      --tw-ring-color: var(--primary-color);
     }
   }
   .focus\:ring-blue-500 {
