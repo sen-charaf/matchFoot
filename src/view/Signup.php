@@ -9,7 +9,6 @@
 <body>
     <form id="signup-form">
         <div class="signup-container">
-            <h1>Bienvenue sur SoftFootball - Création de compte</h1>
             <div class="signup-card">
                 <h2>Créer un compte</h2>
                 <p>Inscrivez-vous pour rejoindre la communauté.</p>

@@ -8,11 +8,11 @@ $clubLogoPath = '';
 
 if (isset($_GET['id'])) {
     $club = ClubController::getClubById($_GET['id']);
-    $clubName = $club->name;
-    $clubNickname = $club->nickname;
-    $clubStadeName = $club->stadium['nom'];
-    $clubCreationDate = $club->founded_at;
-    $clubLogoPath = $club->logo;
+    $clubName = $club['nom'];
+    $clubNickname = $club['nickname'];
+    $clubStadeName = $club['stadium']['nom'];
+    $clubCreationDate = $club['founded_at'];
+    $clubLogoPath = $club['logo'];
 
 
 
@@ -104,8 +104,7 @@ if (isset($_GET['id'])) {
     document.getElementById("modifyModel").addEventListener("submit", () => {
       modal.showModal();
     })
-  </script>
-
+    </script>
   <?php
   if (isset($_GET['id'])){
     echo '<script>modal.showModal();</script>';

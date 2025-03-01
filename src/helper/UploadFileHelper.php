@@ -1,6 +1,6 @@
 <?php
 
-function    uploadImage($image,$uploadDir){
+function uploadImage($image,$uploadDir):string{
     if (isset($image)) {
         if ($image["error"] !== UPLOAD_ERR_OK){
             $error = "Error uploading file: " . $image["error"];
@@ -36,4 +36,22 @@ function    uploadImage($image,$uploadDir){
 
         return $newFileName;
     }
+    $error = "No file selected";
+    include __DIR__ . '/../view/Error.php';
+    return "";
+}
+
+function deleteImage($imagePath):bool{
+    if (file_exists($imagePath)) {
+        if(unlink($imagePath)){
+            return true;
+        }else{
+            $error="Error deleting image";
+            include __DIR__ . '/../view/Error.php';
+            return false;
+        }
+    }
+    $error="Image not found";
+    include __DIR__ . '/../view/Error.php';
+    return false;
 }

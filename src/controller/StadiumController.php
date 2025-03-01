@@ -3,18 +3,19 @@ require_once __DIR__ . '/../model/Stadium.php';
 require_once __DIR__ . '/../model/City.php';
 
 class StadiumController {
-    public static function getAllStads() {
-        $stadiums = Stadium::getAllStads();
+    public static function getAllStads():array {
+        $stadiums = Stadium::getAll();
         return $stadiums;
     }
 
-    public static function getStadById($id) {
-        $stadium = Stadium::getStadById($id);
-        $city = City::getCityById($stadium['ville_id']);
-        return new Stadium($stadium['id'], $stadium['nom'], $stadium['capacity'], $city);
+    public static function getStadById($id):array {
+        $stadium = Stadium::getById($id);
+        $city = City::getById($stadium['ville_id']);
+        $stadium['city'] = $city;
+        return $stadium;
     }
 
-    public static function getStadByName($name) {
+    public static function getStadByName($name):array {
         $stadium = Stadium::getStadByName($name);
 
         return $stadium;

@@ -35,7 +35,7 @@ if (isset($_POST['submit'])) {
 <body class="size-screen">
   <div class="h-screen bg-gray-200 flex">
     <div class="w-72 bg-white flex-col">
-      <div class="bg-red-500 flex">
+      <div class=" flex">
         <div class="text-center w-full text-2xl font-serif">SoftFoorBall</div>
       </div>
     </div>
@@ -46,7 +46,8 @@ if (isset($_POST['submit'])) {
         </div>
         <div class="flex justify-end mb-5">
           <button
-            id="openModal"
+           id="openModal"
+            
             class="bg-green-700 text-white px-4 py-2 rounded">
             + Create Club
           </button>
@@ -75,23 +76,20 @@ if (isset($_POST['submit'])) {
               echo '<td colspan="9">Aucun club trouvé</td>';
               echo '</tr>';
             } else {
-              foreach ($clubs as $club) {
-                echo '<tr>';
-                echo '<td class="px-4 py-2">' . $club->id . '</td>';
-                echo  '<td class="px-4 py-2"> <img class="w-10 h-10 rounded-full" src="' . $club->logo . '" alt="Logo">  </td>';
-                echo '<td class="px-4 py-2">' . $club->name . '</td>';
-                echo '<td class="px-4 py-2">' . $club->nickname . '</td>';
-                echo '<td class="px-4 py-2">' . $club->stadium->name . '</td>';
-                echo '<td class="px-4 py-2">' . $club->entraineur . '</td>';
-                echo '<td class="px-4 py-2">' . $club->founded_at . '</td>';
-                echo
-                '<td class="px-4 py-2"><a href="DeleteClub.php?
-                id=' . $club->id .'" class="text-red-500">Supprimer</a></td><td class="px-4 py-2">';
-                echo '<a href="ClubList.php?
-                id=' . $club->id . '
-                " class="text-blue-500" id="modifyModel">Modifier</a></td>';
-                echo '</tr>';
-              }
+              foreach ($clubs as $club): 
+              var_dump($club) ?>
+              <tr>
+                <td class="px-4 py-2"><?php echo $club['id']; ?></td>
+                <td class="px-4 py-2"> <img class="w-10 h-10 rounded-full" src="<?php echo $club['logo']; ?>" alt="Logo"> </td>
+                <td class="px-4 py-2"><?php echo $club['nom']; ?></td>
+                <td class="px-4 py-2"><?php echo $club['nickname']; ?></td>
+                <td class="px-4 py-2"><?php echo $club['stadium']['nom']; ?></td>
+                <td class="px-4 py-2"><?php echo $club['trainer']; ?></td>
+                <td class="px-4 py-2"><?php echo $club['created_at']; ?></td>
+                <td class="px-4 py-2"><a href="DeleteClub.php?id=<?php echo $club['id']; ?>" class="text-red-500">Supprimer</a></td>
+                <td class="px-4 py-2"><a href="ClubList.php?id=<?php echo $club['id']; ?>" class="text-blue-500" id="modifyModel">Modifier</a></td>
+              </tr>
+            <?php endforeach;
             }
             ?>
           </tbody>

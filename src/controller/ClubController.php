@@ -1,71 +1,55 @@
 <?php
 require_once __DIR__ . '/../helper/UploadFileHelper.php';
 require_once __DIR__ . '/../model/Club.php';
-require_once __DIR__ . '/StadiumController.php'; 
+require_once __DIR__ . '/StadiumController.php';
 
 class ClubController
 {
 
-    public static function index()
+    public static function index(): array
     {
         try {
-            $clubs = Club::getAllClubs();
+            $clubs = Club::getAll();
+            $modifiedClubs = [];
             if ($clubs) {
-                $objectClubs = [];
                 foreach ($clubs as $club) {
                     $stade = StadiumController::getStadById($club['stad_id']);
-                    $objectClubs[] = new Club(
-                        $club['id'],
-                        $club['nom'],
-                        $club['nickname'],
-                        $club['founded_at'],
-                        $club['created_at'],
-                        'http://efoot/logo?file=' . $club['logo_path'],
-                        $club['logo_path'],
-                        null,
-                        $stade
-                    );
+                    $club['logo'] = 'http://efoot/logo?file=' . $club['logo_path'];
+                    $club['stadium'] = $stade;
+                    $club['trainer'] = null;
+                    $modifiedClubs[] = $club;
                 }
-                return $objectClubs;
-            }else{
-                return null;
+                return $modifiedClubs;
+            } else {
+                return [];
             }
         } catch (Exception $e) {
             $error = "Error fetching clubs: " . $e->getMessage();
             include __DIR__ . '/../view/Error.php';
-            return;
+            return [];
         }
-
     }
-    public static function getClubById($id)
+    public static function getClubById($id): array
     {
-        $clubData = Club::getClubDataById($id);
-
-        if (!$clubData) {
+        $club = Club::getById($id);
+        if (!$club) {
             $error = "Club not found";
             include __DIR__ . '/../view/Error.php';
-            return;
+            return [];
         }
 
-        $stadium = Stadium::getStadById($clubData['stad_id']);
+        $stadium = Stadium::getById($club['stad_id']);
         $trainer = null; // Placeholder for now
 
-        $club = new Club(
-            $clubData['id'],
-            $clubData['nom'],
-            $clubData['nickname'],
-            $clubData['founded_at'],
-            $clubData['created_at'],
-            'http://efoot/logo?file=' . $clubData['logo_path'],
-            $clubData['logo_path'],
-            $trainer,
-            $stadium
-        );
+        $club['logo'] = 'http://efoot/logo?file=' . $club['logo_path'];
+        $club['stadium'] = $stadium;
+        $club['trainer'] = $trainer;
+
 
         return $club; // Display club details
     }
 
-    public static function store()
+    public static function store(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = isset($_POST['name']) ? trim($_POST['name']) : null;
@@ -90,12 +74,13 @@ class ClubController
             }
 
             $created_at = date('Y-m-d H:i:s');
-            $stadium=StadiumController::getStadByName($stad_id);
+            $stadium = StadiumController::getStadByName($stad_id);
 
-       
+
 
             try {
-                $club = Club::create($name, $nickname, $logo_path, $trainer_id, $stadium['id'], $founded_at, $created_at);
+                //!To be fixed later : create accepetes data in the form of an array
+               Club::create($name, $nickname, $logo_path, $trainer_id, $stadium['id'], $founded_at, $created_at);
                 header("Location: ClubList.php?success=1");
                 exit();
             } catch (Exception $e) {
@@ -108,7 +93,8 @@ class ClubController
         }
     }
 
-    public static function update($id, $name, $nickname, $logo_path, $trainer_id, $stad_id, $founded_at, $created_at){
+    public static function update($id, $name, $nickname, $logo_path, $trainer_id, $stad_id, $founded_at, $created_at): void
+    {
 
         try {
             $result = Club::update($id, $name, $nickname, $logo_path, $trainer_id, $stad_id, $founded_at, $created_at);
@@ -124,7 +110,9 @@ class ClubController
             include __DIR__ . '/../view/Error.php';
         }
     }
-    public static function deleteClub($id)
+
+
+    public static function deleteClub($id): void
     {
         if (!$id) {
             $error = "Club ID is required";
@@ -133,7 +121,15 @@ class ClubController
         }
 
         try {
+            $club = Club::getById($id);
+            if (!$club) {
+                $error = "Club not found";
+                include __DIR__ . '/../view/Error.php';
+                return;
+            }
+            $logo_path = $club['logo_path'];
             $result = Club::delete($id);
+            deleteImage(__DIR__ . "/../../public/uploads/club_logo/" . $logo_path);
             if ($result) {
                 header("Location: ClubList.php?deleted=1");
             } else {
