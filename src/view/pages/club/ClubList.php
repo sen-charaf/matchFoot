@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../controller/ClubController.php';
+require_once __DIR__ . '/../../../controller/ClubController.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['id']) && !empty($_POST['id'])) {
@@ -23,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CreateClub</title>
-  <link rel="stylesheet" type="text/css" href="../styles/output.css">
+  <link rel="stylesheet" type="text/css" href="../../styles/output.css">
+  <link rel="stylesheet" type="text/css" href="./club.scss">
   <style>
     :root {
       --text-color: #060907;
@@ -40,11 +41,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="size-screen">
   <div class="h-screen bg-gray-200 flex">
-    <div class="w-72 bg-white flex-col">
+    <!-- <div class="w-72 bg-white flex-col">
       <div class=" flex">
         <div class="text-center w-full text-2xl font-serif">SoftFoorBall</div>
       </div>
-    </div>
+    </div> -->
+    <?php include __DIR__ . '/../../components/Sidebar.php'; ?>
     <div class="flex w-full h-full  justify-center items-start mt-10">
       <div class="bg-white w-[98%] h-full py-4 px-10 rounded-lg shadow-md">
         <div class="p-5 bg-white rounded-lg">
@@ -75,7 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </thead>
           <tbody class="">
             <?php
-            require_once __DIR__ . '/../../controller/ClubController.php';
             $clubs = ClubController::index();
             if (empty($clubs)) {
               echo '<tr>';
@@ -83,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               echo '</tr>';
             } else {
               foreach ($clubs as $club): 
-              var_dump($club) ?>
+              ?>
               <tr>
                 <td class="px-4 py-2"><?php echo $club['id']; ?></td>
                 <td class="px-4 py-2"> <img class="w-10 h-10 rounded-full" src="<?php echo $club['logo']; ?>" alt="Logo"> </td>

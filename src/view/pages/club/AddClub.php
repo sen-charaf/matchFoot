@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../controller/ClubController.php';
+
 $clubName = '';
 $clubNickname = '';
 $clubStadeName = '';
