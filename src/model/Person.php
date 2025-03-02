@@ -2,15 +2,14 @@
 require_once __DIR__ . '/../database/connectDB.php';
 
 class Person {
-    protected $pdo;
+    use DbConnection;
     protected $id;
     protected $fistName;
     protected $lastName;
     protected $birthDate;
     protected $age;
     
-    public function __construct($pdo, $id, $fistName, $lastName, $birthDate){
-        $this->pdo = $pdo;
+    public function __construct($id, $fistName, $lastName, $birthDate){
         $this->id = $id;
         $this->fistName = $fistName;
         $this->lastName = $lastName;
