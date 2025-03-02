@@ -5,9 +5,11 @@ $clubNickname = '';
 $clubStadeName = '';
 $clubCreationDate = '';
 $clubLogoPath = '';
+$clubId = '';
 
 if (isset($_GET['id'])) {
     $club = ClubController::getClubById($_GET['id']);
+    $clubId = $club['id'];
     $clubName = $club['nom'];
     $clubNickname = $club['nickname'];
     $clubStadeName = $club['stadium']['nom'];
@@ -23,6 +25,7 @@ if (isset($_GET['id'])) {
     id="clubModal"
     class="p-6 w-[32rem] bg-white shadow-lg rounded-md mx-auto my-auto">
     <form action="ClubList.php" method="post" id="clubForm" enctype="multipart/form-data" class="space-y-4">
+        <input type="text" name="id" value="<?php echo $clubId; ?>" hidden />
         <div>
             <label class="block text-sm font-medium" for="name">Club Name</label>
             <input

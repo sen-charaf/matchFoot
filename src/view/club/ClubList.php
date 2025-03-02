@@ -2,8 +2,14 @@
 
 require_once __DIR__ . '/../../controller/ClubController.php';
 
-if (isset($_POST['submit'])) {
-  ClubController::store();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if (isset($_POST['id']) && !empty($_POST['id'])) {
+      // Update the club (if ID exists)
+      ClubController::update();
+  } else {
+      // Create new club (if no ID)
+      ClubController::store();
+  }
 }
 
 

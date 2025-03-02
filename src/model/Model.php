@@ -40,6 +40,20 @@ class Model
         }
     }
 
+    public static function exists($data):bool
+    {
+        try {
+            $pdo = self::connect();
+            $whereClause = implode(" AND ", array_map(fn($key) => "$key = :$key", array_keys($data)));
+            $stmt = $pdo->prepare("SELECT * FROM " . static::$table . " WHERE $whereClause");
+            $stmt->execute($data);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ? true : false;
+        } catch (PDOException $e) {
+            throw $e;
+        }
+    }
+
     public static function create($data): int
     {
         try {
