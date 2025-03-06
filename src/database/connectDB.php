@@ -8,6 +8,12 @@ trait DbConnection{
     static private $dbname = "efoot";
     static private $charset = "utf8mb4";
 
+    // static private $host = "efoot-ilisi1-2025-marwanmoujahid008-82ae.h.aivencloud.com:19232";
+    // static private $user = "avnadmin"; 
+   
+    // static private $dbname = "efoot";
+    // static private $charset = "utf8mb4";
+
     public static function connect(){
         try {
             $dsn = "mysql:host=".self::$host.";dbname=".self::$dbname.";charset=".self::$charset;
