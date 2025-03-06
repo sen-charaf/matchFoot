@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CreateClub</title>
   <link rel="stylesheet" type="text/css" href="../../styles/output.css">
-  <link rel="stylesheet" type="text/css" href="./club.scss">
+  <link rel="stylesheet" type="text/css" href="../../styles/menu.scss">
   <style>
     :root {
       --text-color: #060907;
@@ -53,14 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <h1 class="pl-3 mb-5 text-2xl font-bold text-gray-800">OPERATIONS CRUD</h1>
         </div>
         <div class="flex justify-end mb-5">
-          <button
-           id="openModal"
+          <a href="ClubList.php?showModal"
+           
             
             class="bg-green-700 text-white px-4 py-2 rounded">
             + Create Club
-          </button>
+  </a>
         </div>
-        <?php include __DIR__ . '/AddClub.php'; ?>
+        <?php include __DIR__ . '/ClubForm.php'; ?>
         <table class="min-w-full border-separate   rounded-lg overflow-hidden">
           <thead class="  text-left" style="color:#ACACAC;">
             <tr>
@@ -92,9 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <td class="px-4 py-2"><?php echo $club['nickname']; ?></td>
                 <td class="px-4 py-2"><?php echo $club['stadium']['nom']; ?></td>
                 <td class="px-4 py-2"><?php echo $club['trainer']; ?></td>
-                <td class="px-4 py-2"><?php echo $club['created_at']; ?></td>
+                <td class="px-4 py-2"><?php echo $club['founded_at']; ?></td>
                 <td class="px-4 py-2"><a href="DeleteClub.php?id=<?php echo $club['id']; ?>" class="text-red-500">Supprimer</a></td>
-                <td class="px-4 py-2"><a href="ClubList.php?id=<?php echo $club['id']; ?>" class="text-blue-500" id="modifyModel">Modifier</a></td>
+                <td class="px-4 py-2"><a href="ClubList.php?id=<?php echo $club['id']; ?>&&showModal" class="text-blue-500" id="modifyModel">Modifier</a></td>
               </tr>
             <?php endforeach;
             }

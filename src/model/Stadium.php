@@ -1,10 +1,9 @@
 <?php
-require_once __DIR__ . '/../database/connectDB.php';
 require_once __DIR__ . '/Model.php';
 class Stadium extends Model
 {
 
-    use DbConnection;
+    
 
     protected static $table = 'stads';
 

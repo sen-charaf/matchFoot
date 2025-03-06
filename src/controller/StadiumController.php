@@ -1,38 +1,149 @@
 <?php
 require_once __DIR__ . '/../model/Stadium.php';
 require_once __DIR__ . '/../model/City.php';
+require_once __DIR__ . '/Controller.php';
+require_once __DIR__ . '/CityController.php';
 
-class StadiumController {
-    public static function getAllStads():array {
+class StadiumController extends Controller
+{
+
+    public static function index(): array
+    {
         $stadiums = Stadium::getAll();
-        return $stadiums;
+        $modifiedStadiums = [];
+        if ($stadiums) {
+            foreach ($stadiums as $stadium) {
+                $city = City::getById($stadium['ville_id']);
+                $stadium['city'] = $city;
+                $modifiedStadiums[] = $stadium;
+            }
+            return $modifiedStadiums;
+        } else {
+            return [];
+        }
     }
 
-    public static function getStadById($id):array {
+    public static function getStadById($id): array
+    {
         $stadium = Stadium::getById($id);
-        $city = City::getById($stadium['ville_id']);
+        if (!$stadium) {
+            $error = "Stadium not found";
+            include __DIR__ . '/../view/Error.php';
+            return [];
+        }
+        $city = CityController::getCityById($stadium['ville_id']);
         $stadium['city'] = $city;
         return $stadium;
     }
 
-    public static function getStadByName($name):array {
-        $stadium = Stadium::getStadByName($name);
-
+    public static function getStadByName($name): array
+    {
+        try {
+            $stadium = Stadium::getStadByName($name);
+            if (!$stadium) {
+                $error = "Stadium not found";
+                include __DIR__ . '/../view/Error.php';
+                return [];
+            }
+        } catch (Exception $e) {
+            $error = "Error fetching stad: " . $e->getMessage();
+            include __DIR__ . '/../view/Error.php';
+            return [];
+        }
         return $stadium;
     }
 
-//     public static function createStad($name, $capacity, $city) {
-//         $result = Stadium::create($name, $capacity, $city);
-//         return $result;
-//     }
 
-//     public static function updateStad($id, $name, $capacity, $city) {
-//         $result = Stadium::update($id, $name, $capacity, $city);
-//         return $result;
-//     }
 
-//     public static function deleteStad($id) {
-//         $result = Stadium::delete($id);
-//         return $result;
-//     }
- }
+    public static function store()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = isset($_POST['name']) ? trim($_POST['name']) : null;
+            $capacity = isset($_POST['capacity']) ? trim($_POST['capacity']) : null;
+            $city = isset($_POST['city_id']) ? trim($_POST['city_id']) : null;
+
+            $data = [
+                'nom' => $name,
+                'capacity' => $capacity,
+                'ville_id' => $city
+            ];
+
+            $rules = [
+                'nom' => 'required',
+                'capacity' => 'required|numeric',
+                'ville_id' => 'required'
+            ];
+
+            $validatpr_result = self::validate($data, $rules);
+            if ($validatpr_result !== true) {
+                $error = $validatpr_result;
+                include __DIR__ . '/../view/Error.php';
+                return;
+            }
+
+            $result = Stadium::create($data);
+            if ($result) {
+                header('Location: StadeList.php');
+            } else {
+                $error = "Error creating stadium";
+                include __DIR__ . '/../view/Error.php';
+            }
+        }
+    }
+
+    public static function update()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = isset($_POST['id']) ? trim($_POST['id']) : null;
+            $name = isset($_POST['name']) ? trim($_POST['name']) : null;
+            $capacity = isset($_POST['capacity']) ? trim($_POST['capacity']) : null;
+            $city = isset($_POST['city_id']) ? trim($_POST['city_id']) : null;
+
+            $data = [
+                'id' => $id,
+                'nom' => $name,
+                'capacity' => $capacity,
+                'ville_id' => $city
+            ];
+
+            $rules = [
+                'id' => 'required',
+                'nom' => 'required',
+                'capacity' => 'required|numeric',
+                'ville_id' => 'required'
+            ];
+
+            $validatpr_result = self::validate($data, $rules);
+            if ($validatpr_result !== true) {
+                $error = $validatpr_result;
+                include __DIR__ . '/../view/Error.php';
+                return;
+            }
+
+            $result = Stadium::update($id, $data);
+            if ($result) {
+                header('Location: StadeList.php');
+            } else {
+                $error = "Error updating stadium";
+                include __DIR__ . '/../view/Error.php';
+            }
+        }
+    }
+
+    public static function deleteStad($id)
+    {
+        if (!$id) {
+            $error = "Invalid stadium id";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
+
+        $result = Stadium::delete($id);
+        if ($result) {
+            header('Location: StadeList.php');
+        } else {
+            $error = "Error deleting stadium";
+            include __DIR__ . '/../view/Error.php';
+        }
+    }
+}

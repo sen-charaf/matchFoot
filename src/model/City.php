@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../database/connectDB.php';
+
 require_once __DIR__ . '/Model.php';
 class City extends Model
 {

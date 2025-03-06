@@ -2,8 +2,9 @@
 require_once __DIR__ . '/../helper/UploadFileHelper.php';
 require_once __DIR__ . '/../model/Club.php';
 require_once __DIR__ . '/StadiumController.php';
+require_once __DIR__ . '/Controller.php';
 
-class ClubController
+class ClubController extends Controller
 {
 
     public static function index(): array
@@ -13,7 +14,7 @@ class ClubController
             $modifiedClubs = [];
             if ($clubs) {
                 foreach ($clubs as $club) {
-                    $stade = StadiumController::getStadById($club['stad_id']);
+                    $stade = StadiumController::getStadById($club['stade_id']);
                     $club['logo'] = 'http://efoot/logo?file=' . $club['logo_path'];
                     $club['stadium'] = $stade;
                     $club['trainer'] = null;
@@ -38,7 +39,7 @@ class ClubController
             return [];
         }
 
-        $stadium = Stadium::getById($club['stad_id']);
+        $stadium = Stadium::getById($club['stade_id']);
         $trainer = null; // Placeholder for now
 
         $club['logo'] = 'http://efoot/logo?file=' . $club['logo_path'];
@@ -55,12 +56,30 @@ class ClubController
             $name = isset($_POST['name']) ? trim($_POST['name']) : null;
             $nickname = isset($_POST['nickname']) ? trim($_POST['nickname']) : null;
             $founded_at = isset($_POST['founded_at']) ? trim(intval($_POST['founded_at'])) : null;
-            $stad_id = isset($_POST['stad_name']) ? trim($_POST['stad_name']) : null;
+            $stade_id = isset($_POST['stade_id']) ? trim($_POST['stade_id']) : null;
             $trainer_id = isset($_POST['trainer_id']) ? trim(intval($_POST['trainer_id'])) : null;
             $logo_path = null;
 
-            if (empty($name) || empty($nickname) || empty($founded_at)) {
-                $error = "All fields are required";
+            $data = [
+                'nom' => $name,
+                'nickname' => $nickname,
+                'founded_at' => $founded_at,
+                'stade_id' => $stade_id,
+                'trainer_id' => $trainer_id
+            ];
+
+            $rules = [
+                'nom' => 'required',
+                'nickname' => 'required|max:5',
+                'founded_at' => 'required|numeric|max:4|min:4',
+                'stade_id' => 'required|numeric',
+                'trainer_id' => 'numeric'
+            ];
+
+            $validate_result = self::validate($data, $rules);
+          //  echo $validate_result;
+            if ($validate_result !== true) {
+                $error = $validate_result;
                 include __DIR__ . '/../view/Error.php';
                 return;
             }
@@ -74,13 +93,18 @@ class ClubController
             }
 
             $created_at = date('Y-m-d H:i:s');
-            $stadium = StadiumController::getStadByName($stad_id);
+
+            if(!Stadium::exists(['id' => $stade_id])) {
+                $error = "Stadium not found";
+                include __DIR__ . '/../view/Error.php';
+                return;
+            }
             $club = [
                 'nom' => $name,
                 'nickname' => $nickname,
                 'logo_path' => $logo_path,
                 'entraineur_id' => $trainer_id,
-                'stad_id' => $stadium['id'],
+                'stade_id' => $stade_id,
                 'founded_at' => $founded_at,
                 'created_at' => $created_at
             ];
@@ -118,10 +142,34 @@ class ClubController
         $name = isset($_POST['name']) ? trim($_POST['name']) : null;
         $nickname = isset($_POST['nickname']) ? trim($_POST['nickname']) : null;
         $founded_at = isset($_POST['founded_at']) ? trim(intval($_POST['founded_at'])) : null;
-        $stad_id = isset($_POST['stad_name']) ? trim($_POST['stad_name']) : null;
+        $stade_id = isset($_POST['stade_id']) ? trim($_POST['stade_id']) : null;
         $trainer_id = isset($_POST['trainer_id']) ? trim(intval($_POST['trainer_id'])) : null;
         $logo_path = null;
         $old_logo_path = null;
+
+        $data = [
+            'nom' => $name,
+            'nickname' => $nickname,
+            'founded_at' => $founded_at,
+            'stade_id' => $stade_id,
+            'trainer_id' => $trainer_id
+        ];
+
+        $rules = [
+            'nom' => 'required',
+            'nickname' => 'required|max:5',
+            'founded_at' => 'required|numeric|max:4|min:4',
+            'stade_id' => 'required|numeric',
+            'trainer_id' => 'numeric'
+        ];
+
+        $validate_result = self::validate($data, $rules);
+      //  echo $validate_result;
+        if ($validate_result !== true) {
+            $error = $validate_result;
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
 
         if (empty($id) || empty($name) || empty($nickname) || empty($founded_at)) {
             $error = "All fields are required";
@@ -129,7 +177,8 @@ class ClubController
             return;
         }
         $club = Club::getById($id);
-        $old_logo_path = $club['logo_path'];
+        $logo_path = $club['logo_path'];
+        
         if (!$club) {
             $error = "Club not found";
             include __DIR__ . '/../view/Error.php';
@@ -137,25 +186,30 @@ class ClubController
         }
 
         // Handle file upload
-        if (isset($_FILES["logo"])) {
+        if (isset($_FILES["logo"]) && $_FILES["logo"]["size"] > 0) {
+            $error = $_FILES["logo"];
+            include __DIR__ . '/../view/Error.php';
+            return;
             $logo = $_FILES["logo"];
             $uploadDir = __DIR__ . "/../../public/uploads/club_logo/";
+            $old_logo_path = $logo_path;
             $logo_path = uploadImage($logo, $uploadDir);
         }
 
-        $stade = StadiumController::getStadByName($stad_id);
-        if(!$stade){
+        if(!Stadium::exists($stade_id)){
             $error = "Stadium not found";
             include __DIR__ . '/../view/Error.php';
             return;
         }
+
+      
 
 
         $club = [
             'nom' => $name,
             'nickname' => $nickname,
             'founded_at' => $founded_at,
-            'stad_id' => $stade['id'],
+            'stade_id' => $stade_id,
             'entraineur_id' => $trainer_id,
             'logo_path' => $logo_path,
             'created_at' => $club['created_at']
@@ -168,7 +222,7 @@ class ClubController
             if ($result) {
 
                 // Delete old logo if new logo is uploaded
-                if ($logo_path && $old_logo_path) {
+                if ($old_logo_path) {
                     deleteImage(__DIR__ . "/../../public/uploads/club_logo/" . $old_logo_path);
                 }
 
@@ -177,7 +231,7 @@ class ClubController
             } else {
 
                 // Delete new logo if update failed
-                if ($logo_path) {
+                if ($old_logo_path) {
                     deleteImage(__DIR__ . "/../../public/uploads/club_logo/" . $logo_path);
                 }
                 $error = "Club not found or already updated";
