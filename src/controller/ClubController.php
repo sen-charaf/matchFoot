@@ -14,8 +14,8 @@ class ClubController extends Controller
             $modifiedClubs = [];
             if ($clubs) {
                 foreach ($clubs as $club) {
-                    $stade = StadiumController::getStadById($club['stade_id']);
-                    $club['logo'] = 'http://efoot/logo?file=' . $club['logo_path'];
+                    $stade = StadiumController::getStadById($club[Club::$stadium_id]);
+                    $club['logo'] = 'http://efoot/logo?file=' . $club[Club::$logo_path];
                     $club['stadium'] = $stade;
                     $club['trainer'] = null;
                     $modifiedClubs[] = $club;
@@ -39,10 +39,10 @@ class ClubController extends Controller
             return [];
         }
 
-        $stadium = Stadium::getById($club['stade_id']);
+        $stadium = Stadium::getById($club[Club::$stadium_id]);
         $trainer = null; // Placeholder for now
 
-        $club['logo'] = 'http://efoot/logo?file=' . $club['logo_path'];
+        $club['logo'] = 'http://efoot/logo?file=' . $club[Club::$logo_path];
         $club['stadium'] = $stadium;
         $club['trainer'] = $trainer;
 
@@ -61,19 +61,19 @@ class ClubController extends Controller
             $logo_path = null;
 
             $data = [
-                'nom' => $name,
-                'nickname' => $nickname,
-                'founded_at' => $founded_at,
-                'stade_id' => $stade_id,
-                'trainer_id' => $trainer_id
+                Club::$name => $name,
+                Club::$nickname => $nickname,
+                Club::$founded_at => $founded_at,
+                Club::$stadium_id => $stade_id,
+                Club::$trainer_id => $trainer_id
             ];
 
             $rules = [
-                'nom' => 'required',
-                'nickname' => 'required|max:5',
-                'founded_at' => 'required|numeric|max:4|min:4',
-                'stade_id' => 'required|numeric',
-                'trainer_id' => 'numeric'
+                Club::$name => 'required',
+                Club::$nickname => 'required|max:5',
+                Club::$founded_at => 'required|numeric|max:4|min:4',
+                Club::$stadium_id => 'required|numeric',
+                Club::$trainer_id => 'numeric'
             ];
 
             $validate_result = self::validate($data, $rules);
@@ -94,19 +94,19 @@ class ClubController extends Controller
 
             $created_at = date('Y-m-d H:i:s');
 
-            if(!Stadium::exists(['id' => $stade_id])) {
+            if(!Stadium::exists([Club::$id => $stade_id])) {
                 $error = "Stadium not found";
                 include __DIR__ . '/../view/Error.php';
                 return;
             }
             $club = [
-                'nom' => $name,
-                'nickname' => $nickname,
-                'logo_path' => $logo_path,
-                'entraineur_id' => $trainer_id,
-                'stade_id' => $stade_id,
-                'founded_at' => $founded_at,
-                'created_at' => $created_at
+                Club::$name => $name,
+                Club::$nickname => $nickname,
+                Club::$logo_path => $logo_path,
+                Club::$trainer_id => $trainer_id,
+                Club::$stadium_id => $stade_id,
+                Club::$founded_at => $founded_at,
+                Club::$created_at => $created_at
             ];
 
             try {
@@ -148,19 +148,19 @@ class ClubController extends Controller
         $old_logo_path = null;
 
         $data = [
-            'nom' => $name,
-            'nickname' => $nickname,
-            'founded_at' => $founded_at,
-            'stade_id' => $stade_id,
-            'trainer_id' => $trainer_id
+            Club::$name => $name,
+            Club::$nickname => $nickname,
+            Club::$founded_at => $founded_at,
+            Club::$stadium_id => $stade_id,
+            Club::$trainer_id => $trainer_id
         ];
 
         $rules = [
-            'nom' => 'required',
-            'nickname' => 'required|max:5',
-            'founded_at' => 'required|numeric|max:4|min:4',
-            'stade_id' => 'required|numeric',
-            'trainer_id' => 'numeric'
+            Club::$name => 'required',
+            Club::$nickname => 'required|max:5',
+            Club::$founded_at => 'required|numeric|max:4|min:4',
+            Club::$stadium_id => 'required|numeric',
+            Club::$trainer_id => 'numeric'
         ];
 
         $validate_result = self::validate($data, $rules);
@@ -177,7 +177,7 @@ class ClubController extends Controller
             return;
         }
         $club = Club::getById($id);
-        $logo_path = $club['logo_path'];
+        $logo_path = $club[Club::$logo_path];
         
         if (!$club) {
             $error = "Club not found";
@@ -206,13 +206,13 @@ class ClubController extends Controller
 
 
         $club = [
-            'nom' => $name,
-            'nickname' => $nickname,
-            'founded_at' => $founded_at,
-            'stade_id' => $stade_id,
-            'entraineur_id' => $trainer_id,
-            'logo_path' => $logo_path,
-            'created_at' => $club['created_at']
+            Club::$name => $name,
+            Club::$nickname => $nickname,
+            Club::$founded_at => $founded_at,
+            Club::$stadium_id => $stade_id,
+            Club::$trainer_id => $trainer_id,
+            Club::$logo_path => $logo_path,
+            Club::$created_at => $club[Club::$created_at]
         ];
 
         try {
@@ -259,7 +259,7 @@ class ClubController extends Controller
                 include __DIR__ . '/../view/Error.php';
                 return;
             }
-            $logo_path = $club['logo_path'];
+            $logo_path = $club[Club::$logo_path];
             $result = Club::delete($id);
             if (!$result) {
                 $error = "Club not found or already deleted";

@@ -8,20 +8,24 @@ $clubLogoPath = '';
 $clubId = '';
 $is_update = false;
 
+
 if (isset($_GET['id'])) {
     $club = ClubController::getClubById($_GET['id']);
-    $clubId = $club['id'];
-    $clubName = $club['nom'];
-    $clubNickname = $club['nickname'];
+
+    $clubId = $club[Club::$id];
+    $clubName = $club[Club::$name];
+    $clubNickname = $club[Club::$nickname];
     $clubStadeName = $club['stadium']['nom'];
-    $clubCreationDate = $club['founded_at'];
+    $clubCreationDate = $club[Club::$founded_at];
     $clubLogoPath = $club['logo'];
     $is_update = true;
 
 
 
 }
+
 ?>
+
 
 <dialog
     id="clubModal"
@@ -57,8 +61,9 @@ if (isset($_GET['id'])) {
                 </option>
                 <?php
                 $stades = StadiumController::index();
+                var_dump($stades);
                 foreach ($stades as $stade):?>
-                    <option value="<?php echo $stade['id']; ?>" <?php echo $clubStadeName == $stade['nom'] ? 'selected' : ''; ?>>
+                    <option value="<?php echo $stade['id']; ?>" <?php echo isset($clubStadeName) && $clubStadeName == $stade['nom'] ? 'selected' : ''; ?>>
                         <?php echo $stade['nom']; ?>
                     </option>
                 <?php endforeach; ?>

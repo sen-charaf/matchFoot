@@ -6,17 +6,17 @@ class Club extends Model
 
     
 
-    protected static $table = 'equipes';
+    protected static $table = 'club';
 
-    private $id;
-    private $name;
-    private $nickname;
-    private $logo;
-    private $logo_path;
-    private $trainer;
-    private $stadium;
-    private $founded_at;
-    private $created_at;
+    public static $id="id";
+    public static $name = "name";
+    public static $nickname = "nickname";
+    public static $logo_path = "logo_path";
+    public static $trainer_id = "trainer_id";
+    public static $stadium_id = "stadium_id";
+    public static $founded_at = "founded_at";
+    public static $created_at = "created_at";
+
 
     
 
