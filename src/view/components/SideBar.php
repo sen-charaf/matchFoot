@@ -11,6 +11,7 @@
             <a href="#">Gestion des Joueurs</a>
             <a href="../arbitre/Arbitres.php">Gestion des Arbitres</a>
             <a href="../staff/StaffList.php">Gestion des Staffs</a>
+            <a href="../country/CountryList.php">Gestion des Pays</a>
         </div>
 
 </div>

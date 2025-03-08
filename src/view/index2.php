@@ -14,11 +14,12 @@ switch ($requestUri) {
         break;
 
     case '/logo' :
-        if (!isset($_GET['file'])) {
+        if (!isset($_GET['file']) || !isset($_GET['dir'])) {
             return; //jsonResponse(['message' => 'File name required'], 400);
         }
         $fileName = basename($_GET['file']);
-        $filePath = __DIR__ . "/../../public/uploads/club_logo/" . $fileName;
+        $dir = basename($_GET['dir']);
+        $filePath = __DIR__ . "/../../public/uploads/" . $dir . "/" . $fileName;
 
         if (!file_exists($filePath)) {
             echo $filePath;

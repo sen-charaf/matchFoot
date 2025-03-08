@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               ?>
               <tr>
                 <td class="px-4 py-2"><?php echo $club[Club::$id]; ?></td>
-                <td class="px-4 py-2"> <img class="w-10 h-10 rounded-full" src="<?php echo $club['logo']; ?>" alt="Logo"> </td>
+                <td class="px-4 py-2"> <img class="w-10 h-10" src="<?php echo $club['logo']; ?>" alt="Logo"> </td>
                 <td class="px-4 py-2"><?php echo $club[Club::$name]; ?></td>
                 <td class="px-4 py-2"><?php echo $club[Club::$nickname]; ?></td>
                 <td class="px-4 py-2"><?php echo $club['stadium'][Stadium::$name]; ?></td>
