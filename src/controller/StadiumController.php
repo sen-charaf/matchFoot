@@ -99,6 +99,19 @@ class StadiumController extends Controller
             $capacity = isset($_POST['capacity']) ? trim($_POST['capacity']) : null;
             $city_id = isset($_POST['city_id']) ? trim($_POST['city_id']) : null;
 
+            if(!$id) {
+                $error = "Id is required";
+                include __DIR__ . '/../view/Error.php';
+                return;
+            }
+
+            $stadium = Stadium::getById($id);
+            if (!$stadium) {
+                $error = "Stadium not found";
+                include __DIR__ . '/../view/Error.php';
+                return;
+            }
+
             $data = [
                 Stadium::$id => $id,
                 Stadium::$name => $name,

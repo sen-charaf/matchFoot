@@ -7,7 +7,7 @@ require_once __DIR__ . '/Controller.php';
 class ClubController extends Controller
 {
     private static $uploadDirectory = __DIR__ . '/../../public/uploads/club_logo/';
-    private static $uploadSubDirectory ='club_logo';
+    private static $uploadSubDirectory = 'club_logo';
 
     public static function index(): array
     {
@@ -17,7 +17,7 @@ class ClubController extends Controller
             if ($clubs) {
                 foreach ($clubs as $club) {
                     $stade = StadiumController::getStadById($club[Club::$stadium_id]);
-                    $club['logo'] = 'http://efoot/logo?file=' . $club[Club::$logo_path].'&dir='.self::$uploadSubDirectory;
+                    $club['logo'] = 'http://efoot/logo?file=' . $club[Club::$logo_path] . '&dir=' . self::$uploadSubDirectory;
                     $club['stadium'] = $stade;
                     $club['trainer'] = null;
                     $modifiedClubs[] = $club;
@@ -44,7 +44,7 @@ class ClubController extends Controller
         $stadium = Stadium::getById($club[Club::$stadium_id]);
         $trainer = null; // Placeholder for now
 
-        $club['logo'] = 'http://efoot/logo?file=' . $club[Club::$logo_path].'&dir='.self::$uploadSubDirectory;
+        $club['logo'] = 'http://efoot/logo?file=' . $club[Club::$logo_path] . '&dir=' . self::$uploadSubDirectory;
         $club['stadium'] = $stadium;
         $club['trainer'] = $trainer;
 
@@ -54,14 +54,19 @@ class ClubController extends Controller
 
     public static function store(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $error = "Invalid request method";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
+
             $name = isset($_POST['name']) ? trim($_POST['name']) : null;
             $nickname = isset($_POST['nickname']) ? trim($_POST['nickname']) : null;
             $founded_at = isset($_POST['founded_at']) ? trim(intval($_POST['founded_at'])) : null;
             $stade_id = isset($_POST['stade_id']) ? trim($_POST['stade_id']) : null;
             $trainer_id = isset($_POST['trainer_id']) ? trim(intval($_POST['trainer_id'])) : null;
             $logo_path = null;
-            
+
 
             $data = [
                 Club::$name => $name,
@@ -95,12 +100,19 @@ class ClubController extends Controller
             }
 
             $created_at = date('Y-m-d H:i:s');
-
-            if (!Stadium::exists([Club::$id => $stade_id])) {
-                $error = "Stadium not found";
+            try {
+                if (!Stadium::exists([Club::$id => $stade_id])) {
+                    $error = "Stadium not found";
+                    include __DIR__ . '/../view/Error.php';
+                    return;
+                }
+            } catch (Exception $e) {
+                $error = "Error fetching stadiums: " . $e->getMessage();
                 include __DIR__ . '/../view/Error.php';
                 return;
             }
+
+
             // $club = [
             //     Club::$name => $name,
             //     Club::$nickname => $nickname,
@@ -126,10 +138,7 @@ class ClubController extends Controller
                 $error = "Failed to create club: " . $e->getMessage();
                 include __DIR__ . '/../view/Error.php';
             }
-        } else {
-            $error = "Invalid request method";
-            include __DIR__ . '/../view/Error.php';
-        }
+   
     }
 
     public static function update(): void
@@ -149,6 +158,19 @@ class ClubController extends Controller
         $trainer_id = isset($_POST['trainer_id']) ? trim(intval($_POST['trainer_id'])) : null;
         $logo_path = null;
         $old_logo_path = null;
+        
+        if(!$id){
+            $error = "Id is required";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
+        
+        $club = Club::getById($id);
+        if (!$club) {
+            $error = "Club not found";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
 
         $data = [
             Club::$name => $name,
@@ -174,12 +196,6 @@ class ClubController extends Controller
             return;
         }
 
-        $club = Club::getById($id);
-        if (!$club) {
-            $error = "Club not found";
-            include __DIR__ . '/../view/Error.php';
-            return;
-        }
         $logo_path = $club[Club::$logo_path];
 
         // Handle file upload

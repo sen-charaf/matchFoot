@@ -97,6 +97,20 @@ class StaffController extends Controller
             $role_id = isset($_POST['role']) ? trim($_POST['role']) : null;
             $birthDate = isset($_POST['birth_date']) ? trim($_POST['birth_date']) : null;
 
+            if(!$id){
+                $error = "Id is required";
+                include __DIR__ . '/../view/Error.php';
+                return;
+            }
+
+            $staff = Staff::getById($id);
+
+            if (!$staff) {
+                $error = "Staff not found";
+                include __DIR__ . '/../view/Error.php';
+                return;
+            }
+            
             $data = [
                 Staff::$firstName => $firstName,
                 Staff::$lastName => $lastName,

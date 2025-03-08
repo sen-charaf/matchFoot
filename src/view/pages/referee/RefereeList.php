@@ -1,14 +1,14 @@
+
 <?php
-    require_once __DIR__ . '/../../../controller/StaffController.php';
+    require_once __DIR__ . '/../../../controller/RefereeController.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['id']) && !empty($_POST['id'])) {
             // Update the club (if ID exists)
-            StaffController::update();
+            RefereeController::update();
         } else {
-            echo "store";
             // Create new club (if no ID)
-            StaffController::store();
+            RefereeController::store();
         }
       }
 ?>
@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../styles/output.css">
     <link rel="stylesheet" type="text/css" href="../../styles/menu.scss">
-    <title>Gestion de Staff</title>
+    <title>Gestion de Referee</title>
 </head>
 
 <body class="size-screen">
@@ -33,13 +33,13 @@
                     <h1 class="pl-3 mb-5 text-2xl font-bold text-gray-800">OPERATIONS CRUD</h1>
                 </div>
                 <div class="flex justify-end mb-5">
-                    <a href="StaffList.php?showModal"
+                    <a href="RefereeList.php?showModal"
                         id="openModal"
                         class="bg-green-700 text-white px-4 py-2 rounded">
-                        + Create Staff
+                        + Create Referee
                     </a>
                 </div>
-                <?php include __DIR__ . '/StaffForm.php'; ?>
+                <?php include __DIR__ . '/RefereeForm.php'; ?>
                 <table class="min-w-full border-separate rounded-lg overflow-hidden">
                     <thead class="text-left" style="color:#ACACAC;">
                         <tr>
@@ -47,31 +47,31 @@
                             <th class="px-4 py-2">Nom</th>
                             <th class="px-4 py-2">prenom</th>
                             <th class="px-4 py-2">Date Naissance</th>
-                            <th class="px-4 py-2">Role</th>
+                            <th class="px-4 py-2">Country</th>
                             <th class="px-4 py-2">Supprimer</th>
                             <th class="px-4 py-2">Modifier</th>
                         </tr>
                     </thead>
                     <tbody>
                     <?php
-                        $staffs = StaffController::index();
-                        if (empty($staffs)) {
+                        $referees = RefereeController::index();
+                        if (empty($referees)) {
                             echo '<tr>';
-                            echo '<td colspan="7">Aucun staff trouvé</td>';
+                            echo '<td colspan="7">Aucun referee trouvé</td>';
                             echo '</tr>';
                         
                         } else {
-                            foreach ($staffs as $staff):
-                                //var_dump($staff);
+                            foreach ($referees as $referee):
+                                //var_dump($referee);
                         ?>
                                 <tr>
-                                    <td class="px-4 py-2"><?php echo $staff[Staff::$id]; ?></td>
-                                    <td class="px-4 py-2"><?php echo $staff[Staff::$lastName]; ?></td>
-                                    <td class="px-4 py-2"><?php echo $staff[Staff::$firstName]; ?></td>
-                                    <td class="px-4 py-2"><?php echo $staff[Staff::$birthDate]; ?></td>
-                                    <td class="px-4 py-2"><?php echo $staff['role'][StaffRole::$name]; ?></td>
-                                    <td class="px-4 py-2"><a href="DeleteStaff.php?id=<?php echo $staff[Staff::$id]; ?>" class="text-red-500">Supprimer</a></td>
-                                    <td class="px-4 py-2"><a href="StaffList.php?id=<?php echo $staff[Staff::$id]; ?>&&showModal" class="text-blue-500" id="modifyModel">Modifier</a></td>
+                                    <td class="px-4 py-2"><?php echo $referee[Referee::$id]; ?></td>
+                                    <td class="px-4 py-2"><?php echo $referee[Referee::$lastName]; ?></td>
+                                    <td class="px-4 py-2"><?php echo $referee[Referee::$firstName]; ?></td>
+                                    <td class="px-4 py-2"><?php echo $referee[Referee::$birthDate]; ?></td>
+                                    <td class="px-4 py-2"><?php echo $referee['country'][Country::$name]; ?></td>
+                                    <td class="px-4 py-2"><a href="DeleteReferee.php?id=<?php echo $referee[Referee::$id]; ?>" class="text-red-500">Supprimer</a></td>
+                                    <td class="px-4 py-2"><a href="RefereeList.php?id=<?php echo $referee[Referee::$id]; ?>&&showModal" class="text-blue-500" id="modifyModel">Modifier</a></td>
                                 </tr>
                         <?php endforeach;
                         }

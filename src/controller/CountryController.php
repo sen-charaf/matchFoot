@@ -90,12 +90,24 @@ class CountryController extends Controller
             include __DIR__ . '/../view/Error.php';
             return;
         }
-
+        
         $id = isset($_POST['id']) ? trim((intval($_POST['id']))) : null;
         $name = isset($_POST['name']) ? trim($_POST['name']) : null;
         $logo_path = null;
         $old_logo_path = null;
 
+        if(!$id) {
+            $error = "Id is required";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
+
+        $country = Country::getById($id);
+        if (!$country) {
+            $error = "Country not found";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
         $data = [
             Country::$name => $name
         ];
@@ -112,13 +124,7 @@ class CountryController extends Controller
             return;
         }
 
-        $country = Country::getById($id);
-        if (!$country) {
-            $error = "Country not found";
-            include __DIR__ . '/../view/Error.php';
-            return;
-        }
-        
+
         $logo_path = $country[Country::$logo_path];
         if (isset($_FILES["logo"]) && $_FILES["logo"]["size"] > 0) {
             $logo = $_FILES["logo"];
