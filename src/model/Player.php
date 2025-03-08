@@ -5,24 +5,33 @@ class Player extends Model{
 
     protected static $table = 'joueurs';
 
-    private $id;
-    private $name;
-    private $surname;
-    private $birthday;
-    private $nationality;
-    private $position;
-    private $club;
-    private $created_at;
+    public static $id='id';
+    public static $firstName='name';
+    public static $lastName='surname';
+    public static $weight='weight';
+    public static $height='height';
+    public static $birthdate='birth_date';
+    public static $country_id='country_id';
+    public static $club_id='club_id';
+    public static $position_id='position_id';
 
-    public function __construct($id, $name, $surname, $birthday, $nationality, $position, $club, $created_at)
-    {
+    public function __construct($id, $firstName, $lastName, $weight, $height, $birthdate, $country_id, $club_id, $position_id) {
         $this->id = $id;
-        $this->name = $name;
-        $this->surname = $surname;
-        $this->birthday = $birthday;
-        $this->nationality = $nationality;
-        $this->position = $position;
-        $this->club = $club;
-        $this->created_at = $created_at;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->weight = $weight;
+        $this->height = $height;
+        $this->birthdate = $birthdate;
+        $this->country_id = $country_id;
+        $this->club_id = $club_id;
+        $this->position_id = $position_id;
+    }
+
+    public function __get($name) {
+        return $this->$name;
+    }
+
+    public function __set($name, $value) {
+        $this->$name = $value;
     }
 }
