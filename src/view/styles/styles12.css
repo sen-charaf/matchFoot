@@ -1,0 +1,117 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #99f1a0, #FFFFFF, #a2eba2); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  margin: 0;
+}
+
+.signup-container,
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+}
+
+.signup-card,
+.login-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 60px;
+  border-radius: 35px;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 450px;
+  color: #356838;
+  transition: transform 0.3s ease-in-out;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+}
+
+h1,
+h2 {
+  text-align: center;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 14px;
+  color: #000000; /* Vert moyen */
+}
+
+.input-group {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+  display: block;
+}
+
+input {
+  width: 90%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 2px solid #388e3c;
+  border-radius: 5px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #19311a;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+button {
+  width: 97%;
+  padding: 14px;
+  background-color: #388e3c; /* Vert foot */
+  color: rgb(231, 234, 232);
+  border: none;
+  margin-right: 4cm;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 10px rgba(56, 142, 60, 0.5);
+}
+
+button:hover {
+  background-color: #1b5e20;
+  transform: scale(1.01);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* 🔗 Liens */
+.links {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.links a {
+  text-decoration: none;
+  color: #010301;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.links a:hover {
+  color: #3c463d;
+}

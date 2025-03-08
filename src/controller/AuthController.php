@@ -15,6 +15,7 @@ class AuthController
             isset($_POST['email']) ? $email = trim($_POST['email']) : $email = '';
             isset($_POST['password']) ? $password = $_POST['password'] : $password = '';
             isset($_POST['confirm_password']) ? $confirm_password = $_POST['confirm_password'] : $confirm_password = '';
+            $profile_path = null;
 
 
 
@@ -45,7 +46,7 @@ class AuthController
                 $profile_path = uploadImage($image,$uploadDir);
             }
 
-            //$profile_path = "";
+            
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             $created_at = date('Y-m-d H:i:s');
             $displayed_name = $displayed_name ?? $username;

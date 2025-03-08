@@ -1,23 +1,24 @@
 <?php
-require_once __DIR__ . '/../database/connectDB.php';
+require_once __DIR__ . '/Model.php';
 
-class Club implements JsonSerializable
+class Club extends Model
 {
 
-    use DbConnection;
+    
 
-    private static $table = 'equipes';
+    protected static $table = 'club';
 
-    private $id;
-    private $name;
-    private $nickname;
-    private $logo;
-    private $logo_path;
-    private $trainer;
-    private $stadium;
-    private $founded_at;
-    private $created_at;
+    public static $id="id";
+    public static $name = "name";
+    public static $nickname = "nickname";
+    public static $logo_path = "logo_path";
+    public static $trainer_id = "trainer_id";
+    public static $stadium_id = "stadium_id";
+    public static $founded_at = "founded_at";
+    public static $created_at = "created_at";
 
+
+    
 
     public function __construct($id, $name, $nickname, $founded_at, $created_at, $logo = null, $logo_path = null, $trainer = null, $stadium = null)
     {
@@ -32,138 +33,17 @@ class Club implements JsonSerializable
         $this->stadium = $stadium;
     }
 
-
-    public static function getClubDataById($id)
+    public function __get($name)
     {
-        try {
-            $table = self::$table;
-            $pdo = self::connect();
-            $stmt = $pdo->prepare("SELECT * FROM `$table` WHERE id = :id");
-            $stmt->execute(['id' => $id]);
-            $clubData = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $clubData;
-        } catch (PDOException $e) {
-            return null;
+        if (property_exists($this, $name)) {
+            return $this->$name;
         }
     }
 
-    public static function  create($name, $nickname, $logo_path, $trainer_id, $stad_id, $founded_at, $created_at)
+    public function __set($name, $value)
     {
-        try {
-            
-            $pdo = self::connect();
-            $table = self::$table;
-
-            // Prepare the SQL query
-            $stmt = $pdo->prepare("
-                INSERT INTO `$table` (nom, nickname, logo_path, entraineur_id, stad_id, founded_at, created_at) 
-                VALUES (:name, :nickname, :logo_path, :trainer_id, :stad_id, :founded_at, :created_at)
-            ");
-
-            $stmt->execute([
-                'name' => $name,
-                'nickname' => $nickname,
-                'logo_path' => $logo_path,
-                'trainer_id' => $trainer_id,
-                'stad_id' => $stad_id,
-                'founded_at' => $founded_at,
-                'created_at' => $created_at
-            ]);
-
-            $id = $pdo->lastInsertId();
-
-
-            $club = new Club($id, $name, $nickname, $founded_at, $created_at, null, $logo_path, null, null);
-           
-            return $club;
-        } catch (PDOException $th) {
-            
-            throw $th;
-            return;
+        if (property_exists($this, $name)) {
+            $this->$name = $value;
         }
-    }
-
-    public static function delete($id) {
-        try {
-            $pdo = self::connect();
-            $table = self::$table;
-    
-            $stmt = $pdo->prepare("DELETE FROM `$table` WHERE id = :id");
-            $stmt->execute(['id' => $id]);
-    
-            if ($stmt->rowCount() > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (PDOException $e) {
-            throw $e;
-            return;
-        }
-    }
-    
-
-
-
-    public function jsonSerialize(): array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'nickname' => $this->nickname,
-            'logo_path' => $this->logo_path,
-            'logo' => $this->logo,
-            'trainer' => $this->trainer,
-            'staduim' => $this->stadium,
-            'founded_at' => $this->founded_at,
-            'created_at' => $this->created_at
-        ];
-    }
-
-
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getNickname()
-    {
-        return $this->nickname;
-    }
-
-    public function getLogo()
-    {
-        return $this->logo;
-    }
-
-    public function getLogoPath()
-    {
-        return $this->logo_path;
-    }
-
-    public function getTrainer()
-    {
-        return $this->trainer;
-    }
-
-    public function getStadium()
-    {
-        return $this->stadium;
-    }
-
-    public function getFoundedAt()
-    {
-        return $this->founded_at;
-    }
-
-    public function getCreatedAt()
-    {
-        return $this->created_at;
     }
 }

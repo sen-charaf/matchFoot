@@ -7,15 +7,14 @@ use DateTime;
 use DbConnection;
 
 class Person {
-    protected $pdo;
+    use DbConnection;
     protected $id;
     protected $firstName;
     protected $lastName;
     protected $birthDate;
     protected $age;
     
-    public function __construct($pdo, $id, $firstName, $lastName, $birthDate){
-        $this->pdo = $pdo ?? DbConnection::connect();
+    public function __construct($id, $firstName, $lastName, $birthDate){
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;

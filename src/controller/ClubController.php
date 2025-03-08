@@ -1,86 +1,284 @@
 <?php
-require_once __DIR__ . '/../helper/responseHelper.php';
 require_once __DIR__ . '/../helper/UploadFileHelper.php';
 require_once __DIR__ . '/../model/Club.php';
+require_once __DIR__ . '/StadiumController.php';
+require_once __DIR__ . '/Controller.php';
 
-class ClubController
+class ClubController extends Controller
 {
+    private static $uploadDirectory = __DIR__ . '/../../public/uploads/club_logo/';
+    private static $uploadSubDirectory = 'club_logo';
 
-    public static function getClubById($id)
+    public static function index(): array
     {
-        $clubData = Club::getClubDataById($id);
-
-        if (!$clubData) {
-            jsonResponse(["message" => "Club not found", "status" => 404], 404);
+        try {
+            $clubs = Club::getAll();
+            $modifiedClubs = [];
+            if ($clubs) {
+                foreach ($clubs as $club) {
+                    $stade = StadiumController::getStadById($club[Club::$stadium_id]);
+                    $club['logo'] = 'http://efoot/logo?file=' . $club[Club::$logo_path] . '&dir=' . self::$uploadSubDirectory;
+                    $club['stadium'] = $stade;
+                    $club['trainer'] = null;
+                    $modifiedClubs[] = $club;
+                }
+                return $modifiedClubs;
+            } else {
+                return [];
+            }
+        } catch (Exception $e) {
+            $error = "Error fetching clubs: " . $e->getMessage();
+            include __DIR__ . '/../view/Error.php';
+            return [];
+        }
+    }
+    public static function getClubById($id): array
+    {
+        $club = Club::getById($id);
+        if (!$club) {
+            $error = "Club not found";
+            include __DIR__ . '/../view/Error.php';
+            return [];
         }
 
-        $stadium = Stadium::getStadById($clubData['entraineur_id']);
+        $stadium = Stadium::getById($club[Club::$stadium_id]);
         $trainer = null; // Placeholder for now
 
-        $club = new Club(
-            $clubData['id'],
-            $clubData['name'],
-            $clubData['nickname'],
-            $clubData['created_at'],
-            'http://efoot/logo' . $clubData['logo_path'],
-            $clubData['logo_path'],
-            $trainer,
-            $stadium
-        );
+        $club['logo'] = 'http://efoot/logo?file=' . $club[Club::$logo_path] . '&dir=' . self::$uploadSubDirectory;
+        $club['stadium'] = $stadium;
+        $club['trainer'] = $trainer;
 
-        jsonResponse(["message" => "Club retrieved", "status" => 200, "club" => $club], 200);
+
+        return $club; // Display club details
     }
 
-    public static function store()
+    public static function store(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $error = "Invalid request method";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
 
-            isset($_POST['name']) ? $name = trim($_POST['name']) : $name = null;
-            isset($_POST['nickname']) ? $nickname = trim($_POST['nickname']) : $nickname = null;
-            isset($_POST['founded_at']) ? $founded_at = trim($_POST['founded_at']) : $founded_at = null;
-            isset($_POST['satd_id']) ? $satd_id = trim($_POST['satd_id']) : $satd_id = null;
-            isset($_POST['trainer_id']) ? $trainer_id = trim($_POST['trainer_id']) : $trainer_id = null;
+            $name = isset($_POST['name']) ? trim($_POST['name']) : null;
+            $nickname = isset($_POST['nickname']) ? trim($_POST['nickname']) : null;
+            $founded_at = isset($_POST['founded_at']) ? trim(intval($_POST['founded_at'])) : null;
+            $stade_id = isset($_POST['stade_id']) ? trim($_POST['stade_id']) : null;
+            $trainer_id = isset($_POST['trainer_id']) ? trim(intval($_POST['trainer_id'])) : null;
             $logo_path = null;
 
-            if (empty($name) | empty($nickname) | empty($founded_at))
-                jsonResponse(['message' => 'All fields are required', 'status' => 400], 400);
 
+            $data = [
+                Club::$name => $name,
+                Club::$nickname => $nickname,
+                Club::$founded_at => $founded_at,
+                Club::$stadium_id => $stade_id,
+                Club::$trainer_id => $trainer_id
+            ];
+
+            $rules = [
+                Club::$name => 'required',
+                Club::$nickname => 'required|max:5',
+                Club::$founded_at => 'required|numeric|max:4|min:4',
+                Club::$stadium_id => 'required|numeric',
+                Club::$trainer_id => 'numeric'
+            ];
+
+            $validate_result = self::validate($data, $rules);
+            //  echo $validate_result;
+            if ($validate_result !== true) {
+                $error = $validate_result;
+                include __DIR__ . '/../view/Error.php';
+                return;
+            }
+
+            // Handle file upload
             if (isset($_FILES["logo"])) {
 
                 $logo = $_FILES["logo"];
-                $uploadDir = __DIR__ . "/../public/uploads/club_logo/";
-                $logo_path = uploadImage($logo, $uploadDir);
+                $logo_path = uploadImage($logo, self::$uploadDirectory);
             }
 
             $created_at = date('Y-m-d H:i:s');
-
             try {
-                $club = Club::create($name, $nickname, $logo_path, $trainer_id, $satd_id, $founded_at, $created_at);
-                jsonResponse(['message' => 'Club created successfully', 'status' => 201, 'club' => $club], 201);
+                if (!Stadium::exists([Club::$id => $stade_id])) {
+                    $error = "Stadium not found";
+                    include __DIR__ . '/../view/Error.php';
+                    return;
+                }
             } catch (Exception $e) {
-                jsonResponse(['message' => 'Failed to create club', 'status' => 201, 'error' => $e->getMessage()], 500);
+                $error = "Error fetching stadiums: " . $e->getMessage();
+                include __DIR__ . '/../view/Error.php';
+                return;
             }
-        } else
-            jsonResponse(['message' => 'Method not allowed', 'status' => 405], 405);
+
+
+            // $club = [
+            //     Club::$name => $name,
+            //     Club::$nickname => $nickname,
+            //     Club::$logo_path => $logo_path,
+            //     Club::$trainer_id => $trainer_id,
+            //     Club::$stadium_id => $stade_id,
+            //     Club::$founded_at => $founded_at,
+            //     Club::$created_at => $created_at
+            // ];
+            $data[Club::$logo_path] = $logo_path;
+            $data[Club::$created_at] = $created_at;
+            try {
+
+                Club::create($data);
+
+
+                header("Location: ClubList.php?success=1");
+                // exit();
+            } catch (Exception $e) {
+                if ($logo_path) {
+                    deleteImage(self::$uploadDirectory . $logo_path);
+                }
+                $error = "Failed to create club: " . $e->getMessage();
+                include __DIR__ . '/../view/Error.php';
+            }
+   
     }
 
+    public static function update(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $error = "Invalid request method";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
 
-    public static function deleteClub($id) {
-        if (!$id) {
-            echo json_encode(['message' => 'Club ID is required', 'status' => 400]);
+
+        $id = isset($_POST['id']) ? trim(intval($_POST['id'])) : null;
+        $name = isset($_POST['name']) ? trim($_POST['name']) : null;
+        $nickname = isset($_POST['nickname']) ? trim($_POST['nickname']) : null;
+        $founded_at = isset($_POST['founded_at']) ? trim(intval($_POST['founded_at'])) : null;
+        $stade_id = isset($_POST['stade_id']) ? trim($_POST['stade_id']) : null;
+        $trainer_id = isset($_POST['trainer_id']) ? trim(intval($_POST['trainer_id'])) : null;
+        $logo_path = null;
+        $old_logo_path = null;
+        
+        if(!$id){
+            $error = "Id is required";
+            include __DIR__ . '/../view/Error.php';
             return;
         }
         
-        try{
-            $result = Club::delete($id);
-            if ($result)
-                jsonResponse(['message' => 'Club deleted successfully', 'status' => 200]);
-            else
-                jsonResponse(['message' => 'Club not found or already deleted', 'status' => 404],404);
-        }catch(Exception $e){
-            jsonResponse(["message" => "Error deleting club: " . $e->getMessage(), "status" => 500],500);
+        $club = Club::getById($id);
+        if (!$club) {
+            $error = "Club not found";
+            include __DIR__ . '/../view/Error.php';
+            return;
         }
 
+        $data = [
+            Club::$name => $name,
+            Club::$nickname => $nickname,
+            Club::$founded_at => $founded_at,
+            Club::$stadium_id => $stade_id,
+            Club::$trainer_id => $trainer_id
+        ];
+
+        $rules = [
+            Club::$name => 'required',
+            Club::$nickname => 'required|max:5',
+            Club::$founded_at => 'required|numeric|max:4|min:4',
+            Club::$stadium_id => 'required|numeric',
+            Club::$trainer_id => 'numeric'
+        ];
+
+        $validate_result = self::validate($data, $rules);
+
+        if ($validate_result !== true) {
+            $error = $validate_result;
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
+
+        $logo_path = $club[Club::$logo_path];
+
+        // Handle file upload
+        if (isset($_FILES["logo"]) && $_FILES["logo"]["size"] > 0) {
+            $logo = $_FILES["logo"];
+            $old_logo_path = $logo_path;
+            $logo_path = uploadImage($logo, self::$uploadDirectory);
+        }
+
+        if (!Stadium::exists([Stadium::$id => $stade_id])) {
+            $error = "Stadium not found";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
+
+
+
+
+        // $club = [
+        //     Club::$name => $name,
+        //     Club::$nickname => $nickname,
+        //     Club::$founded_at => $founded_at,
+        //     Club::$stadium_id => $stade_id,
+        //     Club::$trainer_id => $trainer_id,
+        //     Club::$logo_path => $logo_path,
+        //     Club::$created_at => $club[Club::$created_at]
+        // ];
+        $data[Club::$logo_path] = $logo_path;
+        $data[Club::$created_at] = $club[Club::$created_at];
+        try {
+
+            $result = Club::update($id, $data);
+
+            if ($result) {
+
+                // Delete old logo if new logo is uploaded
+                if ($old_logo_path) {
+                    deleteImage(self::$uploadDirectory . $old_logo_path);
+                }
+
+                header("Location: ClubList.php?updated=1");
+                exit();
+            } else {
+
+                // Delete new logo if update failed
+                if ($old_logo_path) {
+                    deleteImage(self::$uploadDirectory . $logo_path);
+                }
+                $error = "Club not found or already updated";
+                include __DIR__ . '/../view/Error.php';
+            }
+        } catch (Exception $e) {
+            $error = "Error updating club: " . $e->getMessage();
+            include __DIR__ . '/../view/Error.php';
+        }
     }
 
+
+    public static function deleteClub($id): void
+    {
+        if (!$id) {
+            $error = "Club ID is required";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
+
+        try {
+            $club = Club::getById($id);
+            if (!$club) {
+                $error = "Club not found";
+                include __DIR__ . '/../view/Error.php';
+                return;
+            }
+            $logo_path = $club[Club::$logo_path];
+            Club::delete($id);
+
+            if ($logo_path) {
+                deleteImage(self::$uploadDirectory . $logo_path);
+            }
+            header("Location: ClubList.php?deleted=1");
+        } catch (Exception $e) {
+            $error = "Error deleting club: " . $e->getMessage();
+            include __DIR__ . '/../view/Error.php';
+        }
+    }
 }
