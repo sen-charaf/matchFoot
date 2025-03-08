@@ -63,12 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 //var_dump($stadium);
                         ?>
                                 <tr>
-                                    <td class="px-4 py-2"><?php echo $stadium['id']; ?></td>
-                                    <td class="px-4 py-2"><?php echo $stadium['nom']; ?></td>
-                                    <td class="px-4 py-2"><?php echo $stadium['city']['nom']; ?></td>
+                                    <td class="px-4 py-2"><?php echo $stadium[Stadium::$id]; ?></td>
+                                    <td class="px-4 py-2"><?php echo $stadium[Stadium::$name]; ?></td>
+                                    <td class="px-4 py-2"><?php echo $stadium['city'][Stadium::$name]; ?></td>
                                     <td class="px-4 py-2"><?php echo $stadium['capacity']; ?></td>
-                                    <td class="px-4 py-2"><a href="DeleteStade.php?id=<?php echo $stadium['id']; ?>" class="text-red-500">Supprimer</a></td>
-                                    <td class="px-4 py-2"><a href="StadeList.php?id=<?php echo $stadium['id']; ?>&&showModal" class="text-blue-500" id="modifyModel">Modifier</a></td>
+                                    <td class="px-4 py-2"><a href="DeleteStade.php?id=<?php echo $stadium[Stadium::$id]; ?>" class="text-red-500">Supprimer</a></td>
+                                    <td class="px-4 py-2"><a href="StadeList.php?id=<?php echo $stadium[Stadium::$id]; ?>&&showModal" class="text-blue-500" id="modifyModel">Modifier</a></td>
                                 </tr>
                         <?php endforeach;
                         }

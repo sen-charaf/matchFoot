@@ -4,12 +4,12 @@ require_once __DIR__ . '/Model.php';
 
 class Staff extends Model
 {
-    protected static $table = 'staffs';
-    protected $id;
-    protected $firstName;
-    protected $lastName;
-    protected $birthDate;
-    protected $role;
+    protected static $table = 'staff';
+    public static $id= 'id';
+    public static $firstName='name';
+    public static $lastName='surname';
+    public static $birthDate='birth_date';
+    public static $role_id='role_id';
 
     public function __construct($id, $firstName, $lastName, $birthDate, $role)
     {

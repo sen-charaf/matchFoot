@@ -5,12 +5,12 @@ class Stadium extends Model
 
     
 
-    protected static $table = 'stads';
+    protected static $table = 'stadium';
 
-    private $id;
-    private $name;
-    private $capacity;
-    private $city;
+    public static $id = 'id';
+    public static $name = 'name';
+    public static $capacity = 'capacity';
+    public static $city_id = 'city_id';
 
     public function __construct($id, $name, $capacity, $city)
     {

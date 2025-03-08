@@ -3,12 +3,13 @@
 $stadeId= $stadeName = $stadeCityName = $stadeCapacity = '';
 $is_update = false;
 
+
 if (isset($_GET['id'])) {
     $stade = StadiumController::getStadById($_GET['id']);
-    $stadeId = $stade['id'];
-    $stadeName = $stade['nom'];
-    $stadeCityName = $stade['city']['nom'];
-    $stadeCapacity = $stade['capacity'];
+    $stadeId = $stade[Stadium::$id];
+    $stadeName = $stade[Stadium::$name];
+    $stadeCityName = $stade['city'][City::$name];
+    $stadeCapacity = $stade[Stadium::$capacity];
     $is_update = true;
 
 
@@ -41,10 +42,11 @@ if (isset($_GET['id'])) {
                 <?php
                 $cities = CityController::index();
                 foreach ($cities as $city):?>
-                    <option value="<?php echo $city['id']; ?>" <?php echo $stadeCityName == $city['nom'] ? 'selected' : ''; ?>>
-                        <?php echo $city['nom']; ?>
+                    <option value="<?php echo $city[City::$id]; ?>" <?php echo $stadeCityName == $city[City::$name] ? 'selected' : ''; ?>>
+                        <?php echo $city[City::$name]; ?>
                     </option>
-                <?php endforeach; ?>
+                <?php endforeach; 
+               ?>
             </select>
         </div>
         <div>

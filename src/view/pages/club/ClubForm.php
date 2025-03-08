@@ -15,7 +15,7 @@ if (isset($_GET['id'])) {
     $clubId = $club[Club::$id];
     $clubName = $club[Club::$name];
     $clubNickname = $club[Club::$nickname];
-    $clubStadeName = $club['stadium']['nom'];
+    $clubStadeName = $club['stadium'][Stadium::$name];
     $clubCreationDate = $club[Club::$founded_at];
     $clubLogoPath = $club['logo'];
     $is_update = true;
@@ -63,8 +63,8 @@ if (isset($_GET['id'])) {
                 $stades = StadiumController::index();
                 var_dump($stades);
                 foreach ($stades as $stade):?>
-                    <option value="<?php echo $stade['id']; ?>" <?php echo isset($clubStadeName) && $clubStadeName == $stade['nom'] ? 'selected' : ''; ?>>
-                        <?php echo $stade['nom']; ?>
+                    <option value="<?php echo $stade[Stadium::$id]; ?>" <?php echo isset($clubStadeName) && $clubStadeName == $stade[Stadium::$name] ? 'selected' : ''; ?>>
+                        <?php echo $stade[Stadium::$name]; ?>
                     </option>
                 <?php endforeach; ?>
             </select>

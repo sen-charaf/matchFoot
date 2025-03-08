@@ -6,10 +6,10 @@ $is_update = false;
 if (isset($_GET['id'])) {
     $staffId = $_GET['id'];
     $staff = StaffController::getStaffById($staffId);
-    $staffFirstName = $staff['prenom'];
-    $staffLastName = $staff['nom'];
-    $staffRole = $staff['role'];
-    $staffBirthDay = $staff['date_naissance'];
+    $staffFirstName = $staff[Staff::$firstName];
+    $staffLastName = $staff[Staff::$lastName];
+    $staffRole = $staff[Staff::$role_id];
+    $staffBirthDay = $staff[Staff::$birthDate];
 
     $is_update = true;
 }
@@ -53,13 +53,19 @@ if (isset($_GET['id'])) {
         </div>
         <div>
             <label class="block text-sm font-medium" for="role">Role</label>
-            <input
-                type="text"
-                id="role"
-                name="role"
-                value="<?php echo $staffRole; ?>"
-                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                required />
+            <select name="role" id="role" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                <option value="-1" default disabled selected>
+                    Select Role
+                </option>
+                <?php
+                $roles = StaffRoleController::index();
+                foreach ($roles as $role) : ?>
+                    <option value="<?php echo $role[StaffRole::$id]; ?>" <?php echo $staffRole == $role[StaffRole::$id] ? 'selected' : ''; ?>>
+                        <?php echo $role[StaffRole::$name]; ?>
+                    </option>
+                <?php endforeach;
+                ?>
+            </select>
         </div>
         <div class="flex justify-between">
             <button

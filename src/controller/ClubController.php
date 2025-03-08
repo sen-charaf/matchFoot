@@ -196,7 +196,7 @@ class ClubController extends Controller
             $logo_path = uploadImage($logo, $uploadDir);
         }
 
-        if(!Stadium::exists($stade_id)){
+        if(!Stadium::exists([Stadium::$id => $stade_id])) {
             $error = "Stadium not found";
             include __DIR__ . '/../view/Error.php';
             return;

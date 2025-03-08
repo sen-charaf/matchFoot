@@ -92,11 +92,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <td class="px-4 py-2"> <img class="w-10 h-10 rounded-full" src="<?php echo $club['logo']; ?>" alt="Logo"> </td>
                 <td class="px-4 py-2"><?php echo $club[Club::$name]; ?></td>
                 <td class="px-4 py-2"><?php echo $club[Club::$nickname]; ?></td>
-                <td class="px-4 py-2"><?php echo $club['stadium']['nom']; ?></td>
+                <td class="px-4 py-2"><?php echo $club['stadium'][Stadium::$name]; ?></td>
                 <td class="px-4 py-2"><?php echo $club['trainer']; ?></td>
                 <td class="px-4 py-2"><?php echo $club[Club::$founded_at]; ?></td>
-                <td class="px-4 py-2"><a href="DeleteClub.php?id=<?php echo $club['id']; ?>" class="text-red-500">Supprimer</a></td>
-                <td class="px-4 py-2"><a href="ClubList.php?id=<?php echo $club['id']; ?>&&showModal" class="text-blue-500" id="modifyModel">Modifier</a></td>
+                <td class="px-4 py-2"><a href="DeleteClub.php?id=<?php echo $club[Club::$id]; ?>" class="text-red-500">Supprimer</a></td>
+                <td class="px-4 py-2"><a href="ClubList.php?id=<?php echo $club[Club::$id]; ?>&&showModal" class="text-blue-500" id="modifyModel">Modifier</a></td>
               </tr>
             <?php endforeach;
             }

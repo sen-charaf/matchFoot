@@ -13,7 +13,7 @@ class StadiumController extends Controller
         $modifiedStadiums = [];
         if ($stadiums) {
             foreach ($stadiums as $stadium) {
-                $city = City::getById($stadium['ville_id']);
+                $city = City::getById($stadium[Stadium::$city_id]);
                 $stadium['city'] = $city;
                 $modifiedStadiums[] = $stadium;
             }
@@ -31,7 +31,7 @@ class StadiumController extends Controller
             include __DIR__ . '/../view/Error.php';
             return [];
         }
-        $city = CityController::getCityById($stadium['ville_id']);
+        $city = CityController::getCityById($stadium[Stadium::$city_id]);
         $stadium['city'] = $city;
         return $stadium;
     }
@@ -60,18 +60,18 @@ class StadiumController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = isset($_POST['name']) ? trim($_POST['name']) : null;
             $capacity = isset($_POST['capacity']) ? trim($_POST['capacity']) : null;
-            $city = isset($_POST['city_id']) ? trim($_POST['city_id']) : null;
+            $city_id = isset($_POST['city_id']) ? trim($_POST['city_id']) : null;
 
             $data = [
-                'nom' => $name,
-                'capacity' => $capacity,
-                'ville_id' => $city
+                Stadium::$name => $name,
+                Stadium::$capacity => $capacity,
+                Stadium::$city_id => $city_id
             ];
 
             $rules = [
-                'nom' => 'required',
-                'capacity' => 'required|numeric',
-                'ville_id' => 'required'
+                Stadium::$name => 'required',
+                Stadium::$capacity => 'required|numeric',
+                Stadium::$city_id => 'required'
             ];
 
             $validatpr_result = self::validate($data, $rules);
@@ -97,20 +97,20 @@ class StadiumController extends Controller
             $id = isset($_POST['id']) ? trim($_POST['id']) : null;
             $name = isset($_POST['name']) ? trim($_POST['name']) : null;
             $capacity = isset($_POST['capacity']) ? trim($_POST['capacity']) : null;
-            $city = isset($_POST['city_id']) ? trim($_POST['city_id']) : null;
+            $city_id = isset($_POST['city_id']) ? trim($_POST['city_id']) : null;
 
             $data = [
-                'id' => $id,
-                'nom' => $name,
-                'capacity' => $capacity,
-                'ville_id' => $city
+                Stadium::$id => $id,
+                Stadium::$name => $name,
+                Stadium::$capacity => $capacity,
+                Stadium::$city_id => $city_id
             ];
 
             $rules = [
-                'id' => 'required',
-                'nom' => 'required',
-                'capacity' => 'required|numeric',
-                'ville_id' => 'required'
+                Stadium::$id => 'required',
+                Stadium::$name => 'required',
+                Stadium::$capacity => 'required|numeric',
+                Stadium::$city_id => 'required'
             ];
 
             $validatpr_result = self::validate($data, $rules);

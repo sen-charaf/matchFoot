@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../model/Staff.php';
+require_once __DIR__ . '/StaffRoleController.php';
 require_once __DIR__ . '/Controller.php';
 
 class StaffController extends Controller
@@ -9,7 +10,17 @@ class StaffController extends Controller
     {
         try {
             $staffs = Staff::getAll();
-            return $staffs;
+            $modifiedStaffs = [];
+            if ($staffs) {
+                foreach ($staffs as $staff) {
+                    $role = StaffRole::getById($staff[Staff::$role_id]);
+                    $staff['role'] = $role;
+                    $modifiedStaffs[] = $staff;
+                }
+                return $modifiedStaffs;
+            } else {
+                return [];
+            }
         } catch (Exception $e) {
             $error = "Error fetching staffs: " . $e->getMessage();
             include __DIR__ . '/../view/Error.php';
@@ -21,12 +32,14 @@ class StaffController extends Controller
     {
 
         try {
-            $staff = Staff::getById($id);
+            $staff = StaffRoleController::index($id);
             if (!$staff) {
                 $error = "Staff not found";
                 include __DIR__ . '/../view/Error.php';
                 return [];
             }
+            $role = StaffRoleController::getStaffRoleById($staff[Staff::$role_id]);
+            $staff['role'] = $role;
             return $staff;
         } catch (Exception $e) {
             $error = "Error fetching staff: " . $e->getMessage();
@@ -40,21 +53,21 @@ class StaffController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $firstName = isset($_POST['first_name']) ? trim($_POST['first_name']) : null;
             $lastName = isset($_POST['last_name']) ? trim($_POST['last_name']) : null;
-            $role = isset($_POST['role']) ? trim($_POST['role']) : null;
+            $role_id = isset($_POST['role']) ? trim($_POST['role']) : null;
             $birthDate = isset($_POST['birth_date']) ? trim($_POST['birth_date']) : null;
 
             $data = [
-                'prenom' => $firstName,
-                'nom' => $lastName,
-                'role' => $role,
-                'date_naissance' => $birthDate
+                Staff::$firstName => $firstName,
+                Staff::$lastName => $lastName,
+                Staff::$role_id => $role_id,
+                Staff::$birthDate => $birthDate
             ];
 
             $rules = [
-                'prenom' => 'required|min:2|max:30',
-                'nom' => 'required|min:2|max:30',
-                'role' => 'required|min:2|max:10',
-                'date_naissance' => 'required|date_format:Y-m-d'
+                Staff::$firstName => 'required|min:2|max:30',
+                Staff::$lastName => 'required|min:2|max:30',
+                Staff::$role_id => 'required|numeric',
+                Staff::$birthDate => 'required|date_format:Y-m-d'
             ];
 
             $validator_result = self::validate($data, $rules);
@@ -81,21 +94,21 @@ class StaffController extends Controller
             $id = isset($_POST['id']) ? trim($_POST['id']) : null;
             $firstName = isset($_POST['first_name']) ? trim($_POST['first_name']) : null;
             $lastName = isset($_POST['last_name']) ? trim($_POST['last_name']) : null;
-            $role = isset($_POST['role']) ? trim($_POST['role']) : null;
+            $role_id = isset($_POST['role']) ? trim($_POST['role']) : null;
             $birthDate = isset($_POST['birth_date']) ? trim($_POST['birth_date']) : null;
 
             $data = [
-                'prenom' => $firstName,
-                'nom' => $lastName,
-                'role' => $role,
-                'date_naissance' => $birthDate
+                Staff::$firstName => $firstName,
+                Staff::$lastName => $lastName,
+                Staff::$role_id => $role_id,
+                Staff::$birthDate => $birthDate
             ];
 
             $rules = [
-                'prenom' => 'required|min:2|max:30',
-                'nom' => 'required|min:2|max:30',
-                'role' => 'required|min:2|max:10',
-                'date_naissance' => 'required|date_format:Y-m-d'
+                Staff::$firstName => 'required|min:2|max:30',
+                Staff::$lastName => 'required|min:2|max:30',
+                Staff::$role_id => 'required|numeric',
+                Staff::$birthDate => 'required|date_format:Y-m-d'
             ];
 
 

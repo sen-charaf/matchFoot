@@ -6,10 +6,10 @@ class City extends Model
 
     use DbConnection;
 
-    protected static $table = 'villes';
+    protected static $table = 'city';
 
-    private $id;
-    private $name;
+    public static $id= 'id';
+    public static $name = 'name';
 
     public function __construct($id, $name)
     {

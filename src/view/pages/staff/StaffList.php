@@ -65,13 +65,13 @@
                                 //var_dump($staff);
                         ?>
                                 <tr>
-                                    <td class="px-4 py-2"><?php echo $staff['id']; ?></td>
-                                    <td class="px-4 py-2"><?php echo $staff['nom']; ?></td>
-                                    <td class="px-4 py-2"><?php echo $staff['prenom']; ?></td>
-                                    <td class="px-4 py-2"><?php echo $staff['date_naissance']; ?></td>
-                                    <td class="px-4 py-2"><?php echo $staff['role']; ?></td>
-                                    <td class="px-4 py-2"><a href="DeleteStaff.php?id=<?php echo $staff['id']; ?>" class="text-red-500">Supprimer</a></td>
-                                    <td class="px-4 py-2"><a href="StaffList.php?id=<?php echo $staff['id']; ?>&&showModal" class="text-blue-500" id="modifyModel">Modifier</a></td>
+                                    <td class="px-4 py-2"><?php echo $staff[Staff::$id]; ?></td>
+                                    <td class="px-4 py-2"><?php echo $staff[Staff::$firstName]; ?></td>
+                                    <td class="px-4 py-2"><?php echo $staff[Staff::$lastName]; ?></td>
+                                    <td class="px-4 py-2"><?php echo $staff[Staff::$birthDate]; ?></td>
+                                    <td class="px-4 py-2"><?php echo $staff['role'][StaffRole::$name]; ?></td>
+                                    <td class="px-4 py-2"><a href="DeleteStaff.php?id=<?php echo $staff[Staff::$id]; ?>" class="text-red-500">Supprimer</a></td>
+                                    <td class="px-4 py-2"><a href="StaffList.php?id=<?php echo $staff[Staff::$id]; ?>&&showModal" class="text-blue-500" id="modifyModel">Modifier</a></td>
                                 </tr>
                         <?php endforeach;
                         }
