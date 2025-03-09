@@ -60,85 +60,74 @@ class ClubController extends Controller
             return;
         }
 
-            $name = isset($_POST['name']) ? trim($_POST['name']) : null;
-            $nickname = isset($_POST['nickname']) ? trim($_POST['nickname']) : null;
-            $founded_at = isset($_POST['founded_at']) ? trim(intval($_POST['founded_at'])) : null;
-            $stade_id = isset($_POST['stade_id']) ? trim($_POST['stade_id']) : null;
-            $trainer_id = isset($_POST['trainer_id']) ? trim(intval($_POST['trainer_id'])) : null;
-            $logo_path = null;
+        $name = isset($_POST['name']) ? trim($_POST['name']) : null;
+        $nickname = isset($_POST['nickname']) ? trim($_POST['nickname']) : null;
+        $founded_at = isset($_POST['founded_at']) ? trim(intval($_POST['founded_at'])) : null;
+        $stade_id = isset($_POST['stade_id']) ? trim($_POST['stade_id']) : null;
+        $trainer_id = isset($_POST['trainer_id']) ? trim(intval($_POST['trainer_id'])) : null;
+        $logo_path = null;
 
 
-            $data = [
-                Club::$name => $name,
-                Club::$nickname => $nickname,
-                Club::$founded_at => $founded_at,
-                Club::$stadium_id => $stade_id,
-                Club::$trainer_id => $trainer_id
-            ];
+        $data = [
+            Club::$name => $name,
+            Club::$nickname => $nickname,
+            Club::$founded_at => $founded_at,
+            Club::$stadium_id => $stade_id,
+            Club::$trainer_id => $trainer_id
+        ];
 
-            $rules = [
-                Club::$name => 'required',
-                Club::$nickname => 'required|max:5',
-                Club::$founded_at => 'required|numeric|max:4|min:4',
-                Club::$stadium_id => 'required|numeric',
-                Club::$trainer_id => 'numeric'
-            ];
+        $rules = [
+            Club::$name => 'required',
+            Club::$nickname => 'required|max:5',
+            Club::$founded_at => 'required|numeric|max:4|min:4',
+            Club::$stadium_id => 'required|numeric',
+            Club::$trainer_id => 'numeric'
+        ];
 
-            $validate_result = self::validate($data, $rules);
-            //  echo $validate_result;
-            if ($validate_result !== true) {
-                $error = $validate_result;
+        $validate_result = self::validate($data, $rules);
+        //  echo $validate_result;
+        if ($validate_result !== true) {
+            $error = $validate_result;
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
+
+        // Handle file upload
+        if (isset($_FILES["logo"])) {
+
+            $logo = $_FILES["logo"];
+            $logo_path = uploadImage($logo, self::$uploadDirectory);
+        }
+
+        $created_at = date('Y-m-d H:i:s');
+        try {
+            if (!$stade_id || !Stadium::exists([Club::$id => $stade_id])) {
+                $error = "Stadium not found";
                 include __DIR__ . '/../view/Error.php';
                 return;
             }
+        } catch (Exception $e) {
+            $error = "Error fetching stadiums: " . $e->getMessage();
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
 
-            // Handle file upload
-            if (isset($_FILES["logo"])) {
+        $data[Club::$logo_path] = $logo_path;
+        $data[Club::$created_at] = $created_at;
+        try {
 
-                $logo = $_FILES["logo"];
-                $logo_path = uploadImage($logo, self::$uploadDirectory);
+            Club::create($data);
+
+
+            header("Location: ClubList.php?success=1");
+            // exit();
+        } catch (Exception $e) {
+            if ($logo_path) {
+                deleteImage(self::$uploadDirectory . $logo_path);
             }
-
-            $created_at = date('Y-m-d H:i:s');
-            try {
-                if (!Stadium::exists([Club::$id => $stade_id])) {
-                    $error = "Stadium not found";
-                    include __DIR__ . '/../view/Error.php';
-                    return;
-                }
-            } catch (Exception $e) {
-                $error = "Error fetching stadiums: " . $e->getMessage();
-                include __DIR__ . '/../view/Error.php';
-                return;
-            }
-
-
-            // $club = [
-            //     Club::$name => $name,
-            //     Club::$nickname => $nickname,
-            //     Club::$logo_path => $logo_path,
-            //     Club::$trainer_id => $trainer_id,
-            //     Club::$stadium_id => $stade_id,
-            //     Club::$founded_at => $founded_at,
-            //     Club::$created_at => $created_at
-            // ];
-            $data[Club::$logo_path] = $logo_path;
-            $data[Club::$created_at] = $created_at;
-            try {
-
-                Club::create($data);
-
-
-                header("Location: ClubList.php?success=1");
-                // exit();
-            } catch (Exception $e) {
-                if ($logo_path) {
-                    deleteImage(self::$uploadDirectory . $logo_path);
-                }
-                $error = "Failed to create club: " . $e->getMessage();
-                include __DIR__ . '/../view/Error.php';
-            }
-   
+            $error = "Failed to create club: " . $e->getMessage();
+            include __DIR__ . '/../view/Error.php';
+        }
     }
 
     public static function update(): void
@@ -158,13 +147,13 @@ class ClubController extends Controller
         $trainer_id = isset($_POST['trainer_id']) ? trim(intval($_POST['trainer_id'])) : null;
         $logo_path = null;
         $old_logo_path = null;
-        
-        if(!$id){
+
+        if (!$id) {
             $error = "Id is required";
             include __DIR__ . '/../view/Error.php';
             return;
         }
-        
+
         $club = Club::getById($id);
         if (!$club) {
             $error = "Club not found";
@@ -205,24 +194,18 @@ class ClubController extends Controller
             $logo_path = uploadImage($logo, self::$uploadDirectory);
         }
 
-        if (!Stadium::exists([Stadium::$id => $stade_id])) {
-            $error = "Stadium not found";
+        try {
+            if (!$stade_id || !Stadium::exists([Stadium::$id => $stade_id])) {
+                $error = "Stadium not found";
+                include __DIR__ . '/../view/Error.php';
+                return;
+            }
+        } catch (Exception $e) {
+            $error = "Error fetching stadiums: " . $e->getMessage();
             include __DIR__ . '/../view/Error.php';
             return;
         }
 
-
-
-
-        // $club = [
-        //     Club::$name => $name,
-        //     Club::$nickname => $nickname,
-        //     Club::$founded_at => $founded_at,
-        //     Club::$stadium_id => $stade_id,
-        //     Club::$trainer_id => $trainer_id,
-        //     Club::$logo_path => $logo_path,
-        //     Club::$created_at => $club[Club::$created_at]
-        // ];
         $data[Club::$logo_path] = $logo_path;
         $data[Club::$created_at] = $club[Club::$created_at];
         try {
