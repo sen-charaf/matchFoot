@@ -42,6 +42,11 @@ class Controller {
                     }
                 } elseif ($rule === 'unique' && Model::exists([$field => $value])) {
                     $errors[$field] = "$field already exists.";
+                } elseif (strpos($rule,'in:') === 0) {
+                    $options = explode(',', explode(':', $rule)[1]);
+                    if (!in_array($value, $options)) {
+                        $errors[$field] = "$field must be one of " . implode(', ', $options);
+                    }
                 }
             }
 
