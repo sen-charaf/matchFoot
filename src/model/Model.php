@@ -60,9 +60,12 @@ class Model
     public static function exists($data): bool
     {
         try {
+            var_dump($data);
             $pdo = self::connect();
             $whereClause = implode(" AND ", array_map(fn($key) => "$key = :$key", array_keys($data)));
-            $stmt = $pdo->prepare("SELECT * FROM " . static::$table . " WHERE $whereClause");
+            $sql = "SELECT * FROM " . static::$table . " WHERE $whereClause";
+            echo $sql;
+            $stmt = $pdo->prepare($sql);
             $stmt->execute($data);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result ? true : false;
@@ -78,10 +81,11 @@ class Model
             $whereClause = implode(" AND ", array_map(fn($key) => "$key = :$key", array_keys($data)));
             $stmt = $pdo->prepare("SELECT * FROM " . static::$table . " WHERE $whereClause");
             $stmt->execute($data);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (!$result) {
                 return [];
             }
+            
             return $result;
         } catch (PDOException $e) {
             throw $e;
@@ -114,7 +118,7 @@ class Model
             throw $e;
         }
     }
-    
+
     public static function delete($id): bool
     {
         try {

@@ -30,7 +30,7 @@ class AdminTournementController extends Controller
         return $admin;
     }
 
-    public static function getAdminById($id)
+    public static function getAdminTournementById($id)
     {
         try {
             $admin = Admin::getById($id);
@@ -72,12 +72,13 @@ class AdminTournementController extends Controller
             Admin::$password => $password,
             Admin::$birthDate => $birthDate,
             Admin::$phoneNumber => $phoneNumber,
+            Admin::$roleId => '2'
         ];
 
         $rules = [
             Admin::$firstName => 'required|max:255',
             Admin::$lastName => 'required|max:255',
-            Admin::$email => 'required|email|unique',
+            Admin::$email => 'required|email',
             Admin::$password => 'required|min:6|max:255',
             Admin::$birthDate => 'required|date_format:Y-m-d',
             Admin::$phoneNumber => 'required|max:255'
@@ -105,7 +106,7 @@ class AdminTournementController extends Controller
         try {
             $admin = Admin::create($data);
             if ($admin) {
-                header('Location: AdminList.php');
+                header('Location: AdminTournementList.php');
             } else {
                 $error = "Error creating admin";
                 include __DIR__ . '/../view/Error.php';
@@ -138,6 +139,27 @@ class AdminTournementController extends Controller
         $oldProfilePath = null;
 
 
+        
+        $data = [
+            Admin::$id => $id,
+            Admin::$firstName => $firstName,
+            Admin::$lastName => $lastName,
+            Admin::$email => $email,
+            Admin::$password => $password,
+            Admin::$birthDate => $birthDate,
+            Admin::$phoneNumber => $phoneNumber,
+        ];
+        $rules = [
+            Admin::$id => 'required|numeric',
+            Admin::$firstName => 'required|max:255',
+            Admin::$lastName => 'required|max:255',
+            Admin::$email => 'required|email',
+            Admin::$password => 'required|min:6|max:255',
+            Admin::$birthDate => 'required|date_format:Y-m-d',
+            Admin::$phoneNumber => 'required|max:255'
+        ];
+
+
         $validator_results = self::validate($data, $rules);
 
         if ($validator_results !== true) {
@@ -161,27 +183,8 @@ class AdminTournementController extends Controller
         }
 
 
-        $data = [
-            Admin::$id => $id,
-            Admin::$firstName => $firstName,
-            Admin::$lastName => $lastName,
-            Admin::$email => $email,
-            Admin::$password => $password,
-            Admin::$birthDate => $birthDate,
-            Admin::$phoneNumber => $phoneNumber,
-        ];
-        $rules = [
-            Admin::$id => 'required|numeric',
-            Admin::$firstName => 'required|max:255',
-            Admin::$lastName => 'required|max:255',
-            Admin::$email => 'required|email|unique',
-            Admin::$password => 'required|min:6|max:255',
-            Admin::$birthDate => 'required|date_format:Y-m-d',
-            Admin::$phoneNumber => 'required|max:255'
-        ];
 
-
-        if (isset($_FILES['profile_path'])) 
+        if (isset($_FILES['profile_path']) && $_FILES["profile_path"]["size"] > 0)
         {
             $oldProfilePath = $admin[Admin::$profilePath];
             $file = $_FILES['profile_path'];
@@ -200,7 +203,7 @@ class AdminTournementController extends Controller
                 if ($oldProfilePath) {
                     deleteImage(self::$uploadDirectory . $oldProfilePath);
                 }
-                header('Location: AdminList.php');
+                header('Location: AdminTournementList.php');
             } else {
                 $error = "Error updating admin";
                 include __DIR__ . '/../view/Error.php';
@@ -214,7 +217,7 @@ class AdminTournementController extends Controller
         }
     }
 
-    public static function deleteAdmin($id)
+    public static function deleteAdminTournement($id)
     {
         if (!$id) {
             $error = "Invalid admin id";
@@ -225,7 +228,7 @@ class AdminTournementController extends Controller
         try {
             $result = Admin::delete($id);
             if ($result) {
-                header('Location: AdminList.php');
+                header('Location: AdminTournementList.php');
             } else {
                 $error = "Error deleting admin";
                 include __DIR__ . '/../view/Error.php';
