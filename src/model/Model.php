@@ -71,6 +71,23 @@ class Model
         }
     }
 
+    public static function getByFields($data): array
+    {
+        try {
+            $pdo = self::connect();
+            $whereClause = implode(" AND ", array_map(fn($key) => "$key = :$key", array_keys($data)));
+            $stmt = $pdo->prepare("SELECT * FROM " . static::$table . " WHERE $whereClause");
+            $stmt->execute($data);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$result) {
+                return [];
+            }
+            return $result;
+        } catch (PDOException $e) {
+            throw $e;
+        }
+    }
+
     public static function create($data): int
     {
         try {
@@ -97,7 +114,7 @@ class Model
             throw $e;
         }
     }
-
+    
     public static function delete($id): bool
     {
         try {
