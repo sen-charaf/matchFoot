@@ -11,7 +11,7 @@ class Controller {
         foreach ($rules as $field => $ruleSet) {
             $value = $data[$field] ?? null;
             $ruleList = explode('|', $ruleSet);
-
+            
             
             foreach ($ruleList as $rule) {
                 if ($rule === 'required' && empty($value)) {
