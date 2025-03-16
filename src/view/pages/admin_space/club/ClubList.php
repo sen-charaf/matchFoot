@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../../controller/ClubController.php';
+require_once __DIR__ . '/../../../../controller/ClubController.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['id']) && !empty($_POST['id'])) {
@@ -23,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CreateClub</title>
-  <link rel="stylesheet" type="text/css" href="../../styles/output.css">
-  <link rel="stylesheet" type="text/css" href="../../styles/menu.scss">
+  <link rel="stylesheet" type="text/css" href="../../../styles/output.css">
+  <link rel="stylesheet" type="text/css" href="../../../styles/menu.scss">
   <style>
     :root {
       --text-color: #060907;
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="text-center w-full text-2xl font-serif">SoftFoorBall</div>
       </div>
     </div> -->
-    <?php include __DIR__ . '/../../components/Sidebar.php'; ?>
+    <?php include __DIR__ . '/../../../components/Sidebar.php'; ?>
     <div class="flex w-full h-full  justify-center items-start mt-10">
       <div class="bg-white w-[98%] h-full py-4 px-10 rounded-lg shadow-md">
         <div class="p-5 bg-white rounded-lg">
