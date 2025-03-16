@@ -2,7 +2,7 @@
 require_once __DIR__ . '/Model.php';
 
 class TournamentAdmin extends Model {
-    protected static $table = 'admin_tournament';
+    public static $table = 'admin_tournament';
 
     public static $id = 'id';
     public static $adminId = 'admin_id';
@@ -18,6 +18,7 @@ class TournamentAdmin extends Model {
         $this->date = $date;
     }
 
+    
 
     public function __get($name)
     {

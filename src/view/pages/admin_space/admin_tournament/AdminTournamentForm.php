@@ -8,6 +8,7 @@ $adminTournamentEmail = '';
 $adminTournamentPhoneNumber = '';
 $adminTournamentPassword = '';
 $tournamentsAdmin = [];
+$tournamentsAdmin = [];
 $is_update = false;
 
 
@@ -22,7 +23,7 @@ if (isset($_GET['id'])) {
     $adminTournamentEmail = $adminTournament[Admin::$email];
     $adminTournamentPassword = $adminTournament[Admin::$password];
     $adminTournamentPhoneNumber = $adminTournament[Admin::$phoneNumber];
-    $tournamentsAdmin = $adminTournament['tournaments'];
+    $tournamentsAdmin = TournamentController::getTournamentsByAdminId($adminTournamentId);
     $is_update = true;
 }
 ?>
@@ -103,8 +104,11 @@ if (isset($_GET['id'])) {
         </div>
         <div>
             <label class="block text-sm font-medium" for="role">Tournaments</label>
-            <div>
-            <select name="tournaments" id="tournament">
+            <div class="flex items-center space-x-2">
+            <select name="tournaments" id="tournament" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                <option value="-1" default disabled selected>
+                    Select Tournament
+                </option>
                 <?php
                 foreach ($tournaments as $tournament): ?>
                     <option value="<?php echo $tournament[Tournament::$id]; ?>"><?php echo $tournament[Tournament::$name]; ?></option>
@@ -112,22 +116,22 @@ if (isset($_GET['id'])) {
             </select>
             <button type="button" class="bg-[#5de967] text-white px-5 py-1 rounded-md hover:bg-[#73ff7d]" id="addTournament">Ajouter</button>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Supprimer</th>
+            <table class="min-w-full border-separate rounded-lg overflow-hidden ">
+                <thead class="text-left" style="color:#ACACAC;">
+                    <tr class="text-left">
+                        <th class="px-4 py-1">Id</th>
+                        <th class="px-4 py-1">Name</th>
+                        <th class="px-4 py-1 bg">Supprimer</th>
                     </tr>
                 </thead>
                 <tbody id="tournaments_table">
                     <?php
-                    foreach ($tournamentsAdmin as $tourntournamentAdmin): ?>
+                    foreach ($tournamentsAdmin as $tournamentAdmin): ?>
                         <tr>
-                            <input type="hidden" name="tournaments[]" value="<?php echo $tournamentsAdmin[Tournament::$id] ?>">
-                            <td> <?php echo $tournamentsAdmin[Tournament::$id] ?></td>;
-                            <td> <?php echo $tournamentsAdmin[Tournament::$name] ?> </td>;
-                            <td> <button class="text-red-600 hover:text-red-800"> Supprimer </button>
+                            <input type="hidden" name="tournaments[]" value="<?php echo $tournamentAdmin[Tournament::$id] ?>">
+                            <td class="px-4 py-1"> <?php echo $tournamentAdmin[Tournament::$id]; ?></td>
+                            <td class="px-4 py-1"> <?php echo $tournamentAdmin[Tournament::$name]; ?> </td>
+                            <td class="px-4 py-1"> <button class="text-red-600 hover:text-red-800"> Supprimer </button>
                         </tr>
                     <?php endforeach;?>
                 </tbody>
