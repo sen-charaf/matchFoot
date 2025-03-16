@@ -6,7 +6,8 @@
     <hr>
 
         <div class="menu-links">
-            <a href="../admin_tournement/AdminTournementList.php">Gestion des Admine Tournois</a>
+            <a href="../admin_tournament/AdminTournamentList.php">Gestion des Admine Tournois</a>
+            <a href="../tournament/TournamentList.php">Gestion des Tournois</a>
             <a href="../club/ClubList.php">Gestion des equipes</a>
             <a href="../stade/StadeList.php">Gestion des Stades</a>
             <a href="../player/PlayerList.php">Gestion des Joueurs</a>

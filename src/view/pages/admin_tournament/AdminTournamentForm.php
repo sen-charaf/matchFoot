@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/../../../controller/TournamentController.php';
 $adminTournamentId = '';
 $adminTournamentFirstName = '';
 $adminTournamentLastName = '';
@@ -7,7 +7,11 @@ $adminTournamentBirthDay = '';
 $adminTournamentEmail = '';
 $adminTournamentPhoneNumber = '';
 $adminTournamentPassword = '';
+$tournamentsAdmin = [];
 $is_update = false;
+
+
+$tournaments = TournamentController::index();
 
 if (isset($_GET['id'])) {
     $adminTournamentId = $_GET['id'];
@@ -18,7 +22,7 @@ if (isset($_GET['id'])) {
     $adminTournamentEmail = $adminTournament[Admin::$email];
     $adminTournamentPassword = $adminTournament[Admin::$password];
     $adminTournamentPhoneNumber = $adminTournament[Admin::$phoneNumber];
-
+    $tournamentsAdmin = $adminTournament['tournaments'];
     $is_update = true;
 }
 ?>
@@ -82,7 +86,7 @@ if (isset($_GET['id'])) {
         <div>
             <label class="block text-sm font-medium" for="phone_number">Numéro de téléphone</label>
             <input
-                
+
                 name="phone_number"
                 id="phone_number"
                 value="<?php echo $adminTournamentPhoneNumber; ?>"
@@ -96,6 +100,38 @@ if (isset($_GET['id'])) {
                 id="image"
                 name="profile_path"
                 class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
+        </div>
+        <div>
+            <label class="block text-sm font-medium" for="role">Tournaments</label>
+            <div>
+            <select name="tournaments" id="tournament">
+                <?php
+                foreach ($tournaments as $tournament): ?>
+                    <option value="<?php echo $tournament[Tournament::$id]; ?>"><?php echo $tournament[Tournament::$name]; ?></option>
+                <?php endforeach; ?>
+            </select>
+            <button type="button" class="bg-[#5de967] text-white px-5 py-1 rounded-md hover:bg-[#73ff7d]" id="addTournament">Ajouter</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Supprimer</th>
+                    </tr>
+                </thead>
+                <tbody id="tournaments_table">
+                    <?php
+                    foreach ($tournamentsAdmin as $tourntournamentAdmin): ?>
+                        <tr>
+                            <input type="hidden" name="tournaments[]" value="<?php echo $tournamentsAdmin[Tournament::$id] ?>">
+                            <td> <?php echo $tournamentsAdmin[Tournament::$id] ?></td>;
+                            <td> <?php echo $tournamentsAdmin[Tournament::$name] ?> </td>;
+                            <td> <button class="text-red-600 hover:text-red-800"> Supprimer </button>
+                        </tr>
+                    <?php endforeach;?>
+                </tbody>
+            </table>
         </div>
         <div class="flex justify-between">
             <button
@@ -120,12 +156,33 @@ if (isset($_GET['id'])) {
     const modal = document.getElementById("clubModal");
 
 
-    const creationField = document.getElementById("creation_date");
-    creationField.addEventListener("change", (e) => {
-        const digit = e.target.value();
-        if (digit.length > 4) {
-            e.target.value = digit.slice(0, 4);
-        }
+    // const creationField = document.getElementById("creation_date");
+    // creationField.addEventListener("change", (e) => {
+    //     const digit = e.target.value();
+    //     if (digit.length > 4) {
+    //         e.target.value = digit.slice(0, 4);
+    //     }
+    // });
+    
+    const addTournament = document.getElementById("addTournament");
+    addTournament.addEventListener("submit", () => {
+        e.preventDefault();
+    })
+    addTournament.addEventListener("click", () => {
+       
+        const select = document.getElementById("tournament");
+        const option = select.options[select.selectedIndex];
+        const tournamentId = option.value;
+        const tournamentName = option.text;
+        const table = document.getElementById("tournaments_table");
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <input type="hidden" name="tournaments[]" value="${tournamentId}">
+            <td>${tournamentId}</td>
+            <td>${tournamentName}</td>
+            <td><button class="text-red-600 hover:text-red-800">Supprimer</button></td>
+        `;
+        table.appendChild(row);
     });
 </script>
 <?php

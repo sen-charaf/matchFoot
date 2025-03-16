@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../model/Admin.php';
+require_once __DIR__ . '/../model/TournamentAdmin.php';
 require_once __DIR__ . '/../helper/UploadFileHelper.php';
 require_once __DIR__ . '/Controller.php';
 
@@ -17,6 +18,7 @@ class AdminTournamentController extends Controller
             if ($admins) {
                 foreach ($admins as $admin) {
                     $admin['profile'] = 'http://efoot/logo?file=' . $admin[Admin::$profilePath] . '&dir=' . self::$uploadSubDirectory;
+                    $admin['tournaments'] = TournamentAdmin::getByFields([TournamentAdmin::$adminId => $admin[Admin::$id]]);
                     $modifiedAdmins[] = $admin;
                 }
                 return $modifiedAdmins;
@@ -41,6 +43,7 @@ class AdminTournamentController extends Controller
             }
 
             $admin['profile'] = 'http://efoot/logo?file=' . $admin[Admin::$profilePath] . '&dir=' . self::$uploadSubDirectory;
+            $admin['tournaments'] = TournamentAdmin::getByFields([TournamentAdmin::$adminId => $admin[Admin::$id]]);
         } catch (Exception $e) {
             $error = "Error fetching admin: " . $e->getMessage();
             include __DIR__ . '/../view/Error.php';
@@ -63,6 +66,7 @@ class AdminTournamentController extends Controller
         $password = isset($_POST['password']) ? trim($_POST['password']) : null;
         $birthDate = isset($_POST['birth_date']) ? trim($_POST['birth_date']) : null;
         $phoneNumber = isset($_POST['phone_number']) ? trim($_POST['phone_number']) : null;
+        $tournamentsIds = isset($_POST['tournaments']) ? $_POST['tournaments'] : null;
         $profilePath = null;
 
         $data = [
@@ -102,10 +106,34 @@ class AdminTournamentController extends Controller
             }
         }
 
+        if ($tournamentsIds) {
+            foreach ($tournamentsIds as $tournamentId) {
+                $dataTournamentAdmin = [
+                    TournamentAdmin::$tournamentId => $tournamentId,
+                    
+                ];
+            }
+        }
+
         $data[Admin::$profilePath] = $profilePath;
         try {
-            $admin = Admin::create($data);
-            if ($admin) {
+            $adminId = Admin::create($data);
+            if ($adminId) {
+                if ($tournamentsIds) {
+
+                    foreach ($tournamentsIds as $tournamentId) {
+                        $dataTournamentAdmin = [
+                            TournamentAdmin::$tournamentId => $tournamentId,
+                            TournamentAdmin::$adminId => $adminId,
+                        ];
+                        try {
+                            TournamentAdmin::create($dataTournamentAdmin);
+                        } catch (Exception $e) {
+                            $error = "Error affecting tournament: " . $e->getMessage();
+                            include __DIR__ . '/../view/Error.php';
+                        }
+                    }
+                }
                 header('Location: AdminTournamentList.php');
             } else {
                 $error = "Error creating admin";
@@ -195,6 +223,24 @@ class AdminTournamentController extends Controller
                 return;
             }
             $data[Admin::$profilePath] = $profilePath;
+        }
+
+        if ($tournamentsIds) {
+            // Todo: To Implement this with update
+            // ! Update just onely if the tournamentsIds are changed
+
+            foreach ($tournamentsIds as $tournamentId) {
+                $dataTournamentAdmin = [
+                    TournamentAdmin::$tournamentId => $tournamentId,
+                    TournamentAdmin::$adminId => $id,
+                ];
+                try {
+                    TournamentAdmin::create($dataTournamentAdmin);
+                } catch (Exception $e) {
+                    $error = "Error affecting tournament: " . $e->getMessage();
+                    include __DIR__ . '/../view/Error.php';
+                }
+            }
         }
 
         try {
