@@ -28,6 +28,36 @@ class TournamentController extends Controller
         }
     }
 
+    public static function getTournamentsByAdminId($adminId): array
+    {
+        try {
+           $tournaments = Tournament::getData(
+            [TournamentAdmin::$adminId => $adminId],
+            [
+                TournamentAdmin::$table => [
+                    'condition' => TournamentAdmin::$tournamentId . ' = ' . Tournament::$table . '.id',
+                ]
+            ]
+           );
+
+            if (!$tournaments) {
+                $error = "Tournaments not found";
+                include __DIR__ . '/../view/Error.php';
+                return [];
+            }
+            foreach($tournaments as $tournament){
+                $tournament['logo'] = 'http://efoot/logo?file=' . $tournament[Tournament::$logoPath] . '&dir=' . self::$uploadSubDirectory;
+            }
+
+           return $tournaments;
+        } catch (PDOException $e) {
+            $error = "Error fetching tournament: " . $e->getMessage();
+            include __DIR__ . '/../view/Error.php';
+            die();
+            return [];
+        }
+    }
+
     public static function getTournamentById($id): array
     {
         try {

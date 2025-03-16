@@ -41,9 +41,7 @@ class AdminTournamentController extends Controller
                 include __DIR__ . '/../view/Error.php';
                 return [];
             }
-
             $admin['profile'] = 'http://efoot/logo?file=' . $admin[Admin::$profilePath] . '&dir=' . self::$uploadSubDirectory;
-            $admin['tournaments'] = TournamentAdmin::getByFields([TournamentAdmin::$adminId => $admin[Admin::$id]]);
         } catch (Exception $e) {
             $error = "Error fetching admin: " . $e->getMessage();
             include __DIR__ . '/../view/Error.php';
@@ -227,7 +225,7 @@ class AdminTournamentController extends Controller
 
         if ($tournamentsIds) {
             // Todo: To Implement this with update
-            // ! Update just onely if the tournamentsIds are changed
+            // ! Update just only if the tournamentsIds are changed
 
             foreach ($tournamentsIds as $tournamentId) {
                 $dataTournamentAdmin = [

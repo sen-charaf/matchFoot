@@ -6,7 +6,7 @@ class Model
     use DbConnection;
 
     protected static $table;  // Define table name in child classes
-    
+
 
 
 
@@ -85,12 +85,39 @@ class Model
             if (!$result) {
                 return [];
             }
-            
+
             return $result;
         } catch (PDOException $e) {
             throw $e;
         }
     }
+
+    public static function getData(array $filters = [], array $joins = []): array
+    {
+        try {
+            $pdo = self::connect();
+            $table = static::$table; // Main table
+
+            // Build JOIN Clause
+            $joinStr = self::buildJoinClause($joins);
+
+            // Build WHERE Clause
+            [$whereClause, $params] = self::buildWhereClause($filters);
+
+            // Construct SQL query
+            $query = "SELECT * FROM $table $joinStr $whereClause";
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        } catch (PDOException $e) {
+            throw $e;
+        }
+    }
+
+
+
 
     public static function create($data): int
     {
@@ -131,5 +158,67 @@ class Model
     }
 
 
-    
+
+
+
+    /**
+     * Builds the WHERE clause dynamically, supporting AND, OR, and IN conditions.
+     */
+    private static function buildWhereClause(array $filters): array
+    {
+        $whereParts = [];
+        $params = [];
+
+        foreach ($filters as $key => $value) {
+            // Handle OR conditions (array with "OR" key)
+            if ($key === 'OR' && is_array($value)) {
+                $orParts = [];
+                foreach ($value as $orKey => $orValue) {
+                    if (is_array($orValue)) {
+                        // Handle "IN" condition inside OR
+                        $placeholders = implode(", ", array_fill(0, count($orValue), "?"));
+                        $orParts[] = "$orKey IN ($placeholders)";
+                        $params = array_merge($params, $orValue);
+                    } else {
+                        $orParts[] = "$orKey = ?";
+                        $params[] = $orValue;
+                    }
+                }
+                $whereParts[] = "(" . implode(" OR ", $orParts) . ")";
+            }
+            // Handle IN conditions
+            elseif (is_array($value)) {
+                $placeholders = implode(", ", array_fill(0, count($value), "?"));
+                $whereParts[] = "$key IN ($placeholders)";
+                $params = array_merge($params, $value);
+            }
+            // Handle simple AND conditions
+            else {
+                $whereParts[] = "$key = ?";
+                $params[] = $value;
+            }
+        }
+
+        $whereClause = !empty($whereParts) ? "WHERE " . implode(" AND ", $whereParts) : "";
+
+        return [$whereClause, $params];
+    }
+
+    /**
+     * Builds the JOIN clause dynamically
+     */
+    private static function buildJoinClause(array $joins): string
+    {
+        $joinClauses = [];
+
+        foreach ($joins as $joinTable => $joinData) {
+            if (!isset($joinData['condition'])) {
+                throw new Exception("Join condition for '$joinTable' is missing.");
+            }
+            $joinType = $joinData['type'] ?? 'INNER'; // Default to INNER JOIN
+            $joinClauses[] = "$joinType JOIN $joinTable ON {$joinData['condition']}";
+        }
+
+        return implode(" ", $joinClauses);
+    }
 }

@@ -1,7 +1,7 @@
 <div class="menu-container bg-white">
     <h1 class="website-brand">SoftFootBall</h1>
 
-    <div class="logo-container"><img src="  /matchFoot/assets/programer.jpg" alt="Logo"></div>
+    <div class="logo-container"><img src="http://efoot/logo?file=programmer.jpg&dir=admin_profiles" alt="Logo" ></div>
     <h1>Profile</h1>
     <hr>
 

@@ -4,7 +4,7 @@ require_once __DIR__ . '/Model.php';
 
 class Tournament extends Model
 {
-    protected static $table = 'tournament';
+    public static $table = 'tournament';
 
     public static $id="id";
     public static $name="name";
