@@ -1,14 +1,14 @@
 <?php
 
-require_once __DIR__ . '/../../../controller/AdminTournementController.php';
+require_once __DIR__ . '/../../../controller/AdminTournamentController.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['id']) && !empty($_POST['id'])) {
       // Update the adminTournement (if ID exists)
-      AdminTournementController::update();
+      AdminTournamentController::update();
   } else {
       // Create new adminTournement (if no ID)
-      AdminTournementController::store();
+      AdminTournamentController::store();
   }
 }
 
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CreateAdminTournement</title>
+  <title>CreateAdminTournament</title>
   <link rel="stylesheet" type="text/css" href="../../styles/output.css">
   <link rel="stylesheet" type="text/css" href="../../styles/menu.scss">
   <style>
@@ -53,15 +53,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <h1 class="pl-3 mb-5 text-2xl font-bold text-gray-800">OPERATIONS CRUD</h1>
         </div>
         <div class="flex justify-end mb-5">
-          <a href="AdminTournementList.php?showModal"
+          <a href="AdminTournamentList.php?showModal"
            
             
             class="bg-green-700 text-white px-4 py-2 rounded">
-            + Create AdminTournement
+            + Create AdminTournament
   </a>
         </div>
 
-        <?php include __DIR__ . '/AdminTournementForm.php'; ?>
+        <?php include __DIR__ . '/AdminTournamentForm.php'; ?>
         
         <table class="min-w-full border-separate   rounded-lg overflow-hidden">
           <thead class="  text-left" style="color:#ACACAC;">
@@ -80,10 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </thead>
           <tbody class="">
             <?php
-            $adminTournements = AdminTournementController::index();
+            $adminTournements = AdminTournamentController::index();
             if (empty($adminTournements)) {
               echo '<tr>';
-              echo '<td colspan="9">Aucun adminTournement trouvé</td>';
+              echo '<td colspan="9">Aucun adminTournament trouvé</td>';
               echo '</tr>';
             } else {
               foreach ($adminTournements as $adminTournement): 
@@ -97,8 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <td class="px-4 py-2"><?php echo $adminTournement[Admin::$birthDate]; ?></td>
                 <td class="px-4 py-2"><?php echo $adminTournement[Admin::$phoneNumber]; ?></td>
                 <td class="px-4 py-2"><?php echo $adminTournement[Admin::$createdAt]; ?></td>
-                <td class="px-4 py-2"><a href="DeleteAdminTournement.php?id=<?php echo $adminTournement[Admin::$id]; ?>" class="text-red-500">Supprimer</a></td>
-                <td class="px-4 py-2"><a href="AdminTournementList.php?id=<?php echo $adminTournement[Admin::$id]; ?>&&showModal" class="text-blue-500" id="modifyModel">Modifier</a></td>
+                <td class="px-4 py-2"><a href="DeleteAdminTournament.php?id=<?php echo $adminTournement[Admin::$id]; ?>" class="text-red-500">Supprimer</a></td>
+                <td class="px-4 py-2"><a href="AdminTournamentList.php?id=<?php echo $adminTournement[Admin::$id]; ?>&&showModal" class="text-blue-500" id="modifyModel">Modifier</a></td>
               </tr>
             <?php endforeach;
             }
