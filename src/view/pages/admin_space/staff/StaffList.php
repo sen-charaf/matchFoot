@@ -1,5 +1,5 @@
 <?php
-    require_once __DIR__ . '/../../../controller/StaffController.php';
+    require_once __DIR__ . '/../../../../controller/StaffController.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['id']) && !empty($_POST['id'])) {
@@ -19,14 +19,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../../styles/output.css">
-    <link rel="stylesheet" type="text/css" href="../../styles/menu.scss">
+    <link rel="stylesheet" type="text/css" href="../../../styles/output.css">
+    <link rel="stylesheet" type="text/css" href="../../../styles/menu.scss">
     <title>Gestion de Staff</title>
 </head>
 
 <body class="size-screen">
     <div class="h-screen bg-gray-200 flex">
-        <?php include __DIR__ . '/../../components/Sidebar.php'; ?>
+        <?php include __DIR__ . '/../../../components/Sidebar.php'; ?>
         <div class="flex w-full h-full justify-center items-start mt-10">
             <div class="bg-white w-[98%] h-full py-4 px-10 rounded-lg shadow-md">
                 <div class="p-5 bg-white rounded-lg">
