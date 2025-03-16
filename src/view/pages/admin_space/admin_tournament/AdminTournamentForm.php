@@ -182,9 +182,9 @@ if (isset($_GET['id'])) {
         const row = document.createElement("tr");
         row.innerHTML = `
             <input type="hidden" name="tournaments[]" value="${tournamentId}">
-            <td>${tournamentId}</td>
-            <td>${tournamentName}</td>
-            <td><button class="text-red-600 hover:text-red-800">Supprimer</button></td>
+            <td class="px-4 py-1" >${tournamentId}</td>
+            <td class="px-4 py-1" >${tournamentName}</td>
+            <td class="px-4 py-1" ><button class="text-red-600 hover:text-red-800">Supprimer</button></td>
         `;
         table.appendChild(row);
     });

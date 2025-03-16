@@ -133,18 +133,49 @@ class Model
         }
     }
 
-    public static function update($id, $data): bool
+    public static function update($id, $newData): bool
     {
         try {
             $pdo = self::connect();
-            $setClause = implode(", ", array_map(fn($key) => "$key = :$key", array_keys($data)));
-            $stmt = $pdo->prepare("UPDATE " . static::$table . " SET $setClause WHERE id = :id");
-            $data['id'] = $id;
-            return $stmt->execute($data);
+    
+            // Get existing data
+            $stmt = $pdo->prepare("SELECT * FROM " . static::$table . " WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+            $oldData = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if (!$oldData) {
+                throw new Exception("Record with ID $id not found.");
+            }
+    
+            // Compare and keep only changed fields
+            $changedFields = [];
+            $params = [];
+    
+            foreach ($newData as $key => $value) {
+                if (!array_key_exists($key, $oldData) || $oldData[$key] != $value) { 
+                    $changedFields[] = "$key = :$key"; // Build the SET clause
+                    $params[$key] = $value;
+                }
+            }
+    
+            // No changes? Skip the update
+            if (empty($changedFields)) {
+                return false; // No update performed
+            }
+    
+            // Prepare and execute update
+            $sql = "UPDATE " . static::$table . " SET " . implode(", ", $changedFields) . " WHERE id = :id";
+            echo $sql;
+            die();
+            $params['id'] = $id;
+            $stmt = $pdo->prepare($sql);
+            
+            return $stmt->execute($params);
         } catch (PDOException $e) {
             throw $e;
         }
     }
+    
 
     public static function delete($id): bool
     {
