@@ -10,6 +10,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       // Create new adminTournement (if no ID)
       AdminTournamentController::store();
   }
+}else if($_SERVER['REQUEST_METHOD'] === 'GET'){
+  if(isset($_GET['id']) && !empty($_GET['id']) && isset($_GET['delete_tournament']) && !empty($_GET['delete_tournament'])){
+
+    $id = $_GET['id'];
+    $tournamentId = $_GET['delete_tournament'];
+
+    AdminTournamentController::removeTournament($id, $tournamentId);
+    
+  }
+  
 }
 
 
