@@ -166,6 +166,7 @@ class AdminTournamentController extends Controller
 
 
 
+
         $data = [
             Admin::$id => $id,
             Admin::$firstName => $firstName,
@@ -173,7 +174,7 @@ class AdminTournamentController extends Controller
             Admin::$email => $email,
             Admin::$password => $password,
             Admin::$birthDate => $birthDate,
-            Admin::$phoneNumber => $phoneNumber,
+            Admin::$phoneNumber => $phoneNumber
         ];
         $rules = [
             Admin::$id => 'required|numeric',
@@ -226,32 +227,29 @@ class AdminTournamentController extends Controller
 
         try {
             $result = Admin::update($id, $data);
-            if ($result) {
-                if ($tournamentsIds) {
-                    
-                    foreach ($tournamentsIds as $tournamentId) {
-                        if(TournamentAdmin::exists([TournamentAdmin::$tournamentId => $tournamentId, TournamentAdmin::$adminId => $id]))
-                            continue;
-                    
-                        $dataTournamentAdmin = [
-                            TournamentAdmin::$tournamentId => $tournamentId,
-                            TournamentAdmin::$adminId => $id,
-                        ];
-                        try {
-                            TournamentAdmin::create($dataTournamentAdmin);
-                        } catch (Exception $e) {
-                            $error = "Error affecting tournament: " . $e->getMessage();
-                            include __DIR__ . '/../view/Error.php';
-                        }
+            if ($tournamentsIds) {
+
+                foreach ($tournamentsIds as $tournamentId) {
+                    if (TournamentAdmin::getByFields([TournamentAdmin::$tournamentId => $tournamentId, TournamentAdmin::$adminId => $id]))
+                        continue;
+
+                    $dataTournamentAdmin = [
+                        TournamentAdmin::$tournamentId => $tournamentId,
+                        TournamentAdmin::$adminId => $id,
+                    ];
+                    try {
+                        TournamentAdmin::create($dataTournamentAdmin);
+                    } catch (Exception $e) {
+                        $error = "Error affecting tournament: " . $e->getMessage();
+                        include __DIR__ . '/../view/Error.php';
                     }
                 }
+            }
+            if ($result) {
                 if ($oldProfilePath) {
                     deleteImage(self::$uploadDirectory . $oldProfilePath);
                 }
                 header('Location: AdminTournamentList.php');
-            } else {
-                $error = "Error updating admin";
-                include __DIR__ . '/../view/Error.php';
             }
         } catch (Exception $e) {
             if ($profilePath) {
@@ -280,6 +278,34 @@ class AdminTournamentController extends Controller
             }
         } catch (Exception $e) {
             $error = "Error deleting admin: " . $e->getMessage();
+            include __DIR__ . '/../view/Error.php';
+        }
+    }
+
+    public static function removeTournament($id, $tournamentId)
+    {
+        if (!$id) {
+            $error = "Invalid admin id";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
+
+        if (!$tournamentId) {
+            $error = "Invalid tournament id";
+            include __DIR__ . '/../view/Error.php';
+            return;
+        }
+
+        try {
+            $result = TournamentAdmin::deleteByFields([TournamentAdmin::$adminId => $id, TournamentAdmin::$tournamentId => $tournamentId]);
+            if ($result) {
+                header('Location: AdminTournamentList.php?id=' . $id.'&&showModal');
+            } else {
+                $error = "Error deleting tournament";
+                include __DIR__ . '/../view/Error.php';
+            }
+        } catch (Exception $e) {
+            $error = "Error deleting tournament: " . $e->getMessage();
             include __DIR__ . '/../view/Error.php';
         }
     }
