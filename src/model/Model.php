@@ -114,10 +114,12 @@ class Model
 
             // Construct SQL query
             $query = "SELECT $selectClause FROM $table $joinStr $whereClause";
+
           
 
             $stmt = $pdo->prepare($query);
             $stmt->execute($params);
+            
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         } catch (PDOException $e) {
@@ -298,6 +300,7 @@ class Model
 
     return implode(", ", array_unique($selectFields));
 }
+
 private static function getTableColumns(string $table, array $excludeFields = []): array
 {
     try {
