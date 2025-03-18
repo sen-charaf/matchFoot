@@ -12,6 +12,4 @@ class GameMatch extends Model {
     public static $club1_id = 'club1_id';
     public static $club2_id = 'club2_id';
 
-    
-
 }

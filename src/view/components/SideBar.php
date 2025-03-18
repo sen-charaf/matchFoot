@@ -1,9 +1,12 @@
 <div class="w-72 h-screen bg-white border-r border-green-100 flex flex-col fixed left-0 shadow-lg">
     <!-- Brand Header -->
     <div class="p-6 border-b border-green-100">
-        <h1 class="text-2xl font-bold text-green-800 text-center">
-            SoftFootBall
-        </h1>
+        <a href="../dashboard/Dashboard.php">
+
+            <h1 class="text-2xl font-bold text-green-800 text-center">
+                SoftFootBall
+            </h1>
+        </a>
     </div>
 
     <!-- Profile Section -->

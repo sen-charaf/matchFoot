@@ -15,6 +15,15 @@
             border-bottom: 2px solid #15803d;
             color: #15803d;
         }
+
+        .nav-item-active {
+            background-color: rgba(34, 197, 94, 0.2);
+            /* Light green background */
+            border-left: 4px solid #22c55e;
+            /* Green border */
+        }
+    </style>
+
     </style>
 </head>
 
@@ -522,24 +531,6 @@
     </div>
 
     <script>
-        function switchTab(tab) {
-            const matchesTab = document.getElementById('matchesTab');
-            const standingsTab = document.getElementById('standingsTab');
-            const tabs = document.querySelectorAll('nav button');
-
-            tabs.forEach(t => t.classList.remove('tab-active'));
-
-            if (tab === 'matches') {
-                matchesTab.classList.remove('hidden');
-                standingsTab.classList.add('hidden');
-                tabs[0].classList.add('tab-active');
-            } else {
-                matchesTab.classList.add('hidden');
-                standingsTab.classList.remove('hidden');
-                tabs[1].classList.add('tab-active');
-            }
-        }
-
         function openAddMatchModal() {
             const modal = document.getElementById('matchModal');
             const scoreSection = document.getElementById('scoreSection');
