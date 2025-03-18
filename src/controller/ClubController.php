@@ -15,16 +15,25 @@ class ClubController extends Controller
     {
         try {
             $clubs = Club::getAll();
+            // $clubs = Club::getData(
+            //     [],
+            //     [Stadium::$table => ['condition' => Club::$stadium_id = Stadium::$table . '.' . Stadium::$id]],
+            //     ['id','name']
+            // );
+            
             $modifiedClubs = [];
             if ($clubs) {
                 foreach ($clubs as $club) {
-                    $stade = StadiumController::getStadById($club[Club::$stadium_id]);
-                    $club['logo'] = 'http://efoot/logo?file=' . $club[Club::$logo_path] . '&dir=' . self::$uploadSubDirectory;
-                    $club['stadium'] = $stade;
+                    // $stade = StadiumController::getStadById($club[Club::$stadium_id]);
+                    if($club[Club::$logo_path])
+                        $club['logo'] = 'http://efoot/logo?file=' . $club[Club::$logo_path] . '&dir=' . self::$uploadSubDirectory;
+                    // $club['stadium'] = $stade;
                     $club['trainer'] = null;
                     $modifiedClubs[] = $club;
                 }
+
                 return $modifiedClubs;
+               
             } else {
                 return [];
             }
